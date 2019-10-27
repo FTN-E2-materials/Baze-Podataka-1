@@ -216,11 +216,7 @@ group by nap
 having sum(brc)>15;
 
 
---• Izlistati sifre i nazive projekata na kojima radi vise od dva radnika
 
-select spr,nap
-from projekat p,radproj rp
-where p.spr = rp.spr;
 
 
 
