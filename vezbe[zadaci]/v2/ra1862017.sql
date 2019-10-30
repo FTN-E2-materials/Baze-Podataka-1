@@ -218,6 +218,46 @@ having sum(brc)>15;
 
 
 
+--• Prikazati imena i prezimena rukovodilaca
+--projekata i broj projekata kojima rukovode.
+
+
+select ime,prz,count(spr)
+from radnik,projekat
+where mbr = ruk
+group by ime,prz
+order by count(spr) desc;
+
+--• Prikazati za svakog radnika mbr, prz, ime,
+--ukupan broj projekata i ukupno
+--angažovanje na projektima na kojima radi.
+
+select radnik.mbr,prz,ime,count(spr) as "UKUPAN BROJ PROJEKATA",sum(brc) as "UKUPNO ANGAZOVANJE"
+from radnik,radproj
+where radproj.mbr = radnik.mbr
+group by radnik.mbr,prz,ime
+order by count(spr) desc;
+
+
+--• Prikazati imena i prezimena rukovodilaca
+--projekata i broj projekata na kojima rade.
+
+select ime,prz,count(spr) as "BROJ PROJEKATA NA KOJIM RADI"
+from projekat,radnik
+where mbr=ruk
+group by mbr,ime,prz
+order by count(spr) desc;
+
+--• Izlistati nazive projekata na kojima radi bar
+--jedan radnik koji radi i na projektu sa
+--šifrom 60.
+
+select nap
+from projekat
+where spr in( select spr from radproj where mbr in(select mbr from radproj where spr = 60);
+
+
+
 
 
 
