@@ -107,7 +107,139 @@ where r.mbr=rp1.mbr and
 rp1.brc>(select avg(brc) from radproj rp2
 where rp2.spr=rp1.spr);
 
+--EXISTS
+--• Ko je najstariji radnik? (exist)
 
+select ime,prz,god
+from radnik r
+where not exists (select mbr from radnik r1 where r1.god < r.god);
+
+--• Izlistati mbr, ime, prz radnika koji ne rade na
+--projektu sa šifrom 10. (ne postoji radnik sa
+--projekta 10 koji je jednak traženom radniku) 
+
+
+select mbr,ime,prz
+from radnik r
+where not exists(select * from radproj rp where r.mbr = rp.mbr and rp.spr=10);
+
+
+--• Izlistati radnike koji ne rade ni na jednom projektu. (ne
+--postoji projekat na kom rade) 
+
+select * 
+from radnik r
+where not exists ( select * from radproj rp where rp.mbr =r.mbr);
+
+--• Izlistati radnike koji nisu rukovodioci projekata. (ne
+--postoji projekat kojim rukovodi taj radnik)
+
+select *
+from radnik r
+where not exists (  select * from projekat p where p.ruk = r.mbr);
+
+--• Ko je najmla?i rukovodilac projekata?
+
+select distinct mbr,ime,prz,god
+from radnik r,projekat p
+where r.mbr = p.ruk and not exists( select * from radnik r2,projekat p2 where r2.god > r.god and r2.mbr = p2.ruk);
+
+
+--Unija (UNION)
+--• Izlistati mbr, ime, prz radnika koji rade na
+--projektu sa šifrom 20 ili im je plata ve?a od
+--prose?ne. (unija)
+--unija ide uvek izmedju dva selecta
+
+select mbr, ime, prz 
+from radnik
+where mbr in (select mbr from radproj where spr=20) 
+union
+select mbr, ime, prz 
+from radnik
+where plt>(select avg(plt) from radnik);
+
+--Unija (UNION ALL)
+--• Izlistati mbr, ime, prz radnika koji rade na
+--projektu sa šifrom 20 ili im je plata ve?a od
+--prose?ne. (unija)
+select mbr, ime, prz from radnik
+where mbr in
+(select mbr from radproj where spr=20)
+union all
+select mbr, ime, prz from radnik
+where plt>(select avg(plt) from radnik);
+
+--Presek (INTERSECT)
+--• Izlistati mbr, ime, prz radnika ?ije prezime
+--po?inje na slovo M ili slovo R i mbr, ime,
+--prz radnika ?ije prezime po?inje na slovo
+--M ili slovo P.
+
+select mbr, ime, prz from radnik
+where prz like 'M%' or prz like 'R%'
+INTERSECT
+select mbr, ime, prz from radnik
+where prz like 'M%' or prz like 'P%';
+
+--Razlika (MINUS)
+--• Izlistati mbr, ime, prz radnika ?ije prezime
+--po?inje na slovo M ili slovo R i mbr, ime,
+--prz radnika ?ije prezime po?inje na slovo
+--M ili slovo P.
+select mbr, ime, prz from radnik
+where prz like 'M%' or prz like 'R%'
+MINUS
+select mbr, ime, prz from radnik
+where prz like 'M%' or prz like 'P%';
+
+
+--Prirodno spajanje (NATURAL)
+--• Prikazati ime i prz radnika koji rade na
+--projektu sa šifrom 30.
+select ime, prz
+from radnik natural join radproj
+where spr=30;
+
+--Unutrašnje spajanje (INNER)
+--• Prikazati ime i prz radnika koji rade na
+--projektu sa šifrom 30.
+select ime, prz
+from radnik r inner join radproj rp
+on r.mbr=rp.mbr
+where spr=30;
+
+--Spoljno spajanje (LEFT
+--OUTER)
+--• Prikazati mbr, ime i prz radnika i šifre projekata
+--na kojima rade. Prikazati, tako?e, iste podatke i
+--za radnike koji ne rade ni na jednom projektu, pri
+--?emu za šifru projekta treba, u tom slu?aju,
+--prikazati nedostaju?u vrednost.
+select r.mbr,ime, prz, spr
+from radnik r left outer join radproj rp
+on r.mbr=rp.mbr;
+
+--Spoljno spajanje (RIGHT
+--OUTER)
+--• Prikazati nazive svih projekata i mbr radnika koji
+--rade na njima. Ukoliko na projektu ne radi ni
+--jedan radnik ispisati nulu umesto mati?nog
+--broja.
+
+select nvl(rp.mbr, 0) "Mbr radnika", nap
+from radproj rp right outer join projekat p
+on rp.spr=p.spr;
+
+
+--Primer
+--• Prikazati mati?ne brojeve, imena i
+--prezimena radnika, zajedno sa šiframa
+--projekata na kojima rade. Prikazati,
+--tako?e, iste podatke i za radnike koji ne
+--rade ni na jednom projektu, pri ?emu za
+--šifru projekta treba, u tom slu?aju,
+--prikazati nedostaju?u vrednost. 
 
 
 
