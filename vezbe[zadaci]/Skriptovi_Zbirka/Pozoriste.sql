@@ -1,0 +1,10 @@
+insert into Pozoriste values (1, 'Jugoslovensko dramsko pozoriste', 'Kralja Milana 50', 'http://jdp.rs');
+insert into Pozoriste values (2, 'Pozoriste na Terazijama', 'Trg Nikole Pasica 3', 'http://pozoristeterazije.com');
+insert into Pozoriste values (3, 'Beogradsko dramsko pozoriste', 'Milesevska 64a', 'http://www.bdp.rs');
+insert into Pozoriste values (4, 'Narodno pozoriste', 'Francuska 3', 'https://www.narodnopozoriste.rs');
+insert into Pozoriste values (5, 'Knjazevsko-srpski teatar Kragujevac', 'Daniciceva 3', 'http://www.joakimvujic.com');
+insert into Pozoriste values (6, 'Centar za kulturu Tivat', 'Luke Tomanovica 4', 'http://www.czktivat.me');
+insert into Pozoriste values (7, 'Slovensko narodno gledalisce Drama', 'Erjavceva 1', 'http://www.drama.si');
+insert into Pozoriste values (8, 'Narodno pozoriste u Nisu', 'Sindjelicev trg', 'http://www.narodnopozoristenis.rs');
+insert into Pozoriste values (9, 'Atelje 212', 'Svetogorska 21', 'http://atelje212.rs');
+commit;

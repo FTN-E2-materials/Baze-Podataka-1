@@ -231,15 +231,3 @@ select nvl(rp.mbr, 0) "Mbr radnika", nap
 from radproj rp right outer join projekat p
 on rp.spr=p.spr;
 
-
---Primer
---• Prikazati mati?ne brojeve, imena i
---prezimena radnika, zajedno sa šiframa
---projekata na kojima rade. Prikazati,
---tako?e, iste podatke i za radnike koji ne
---rade ni na jednom projektu, pri ?emu za
---šifru projekta treba, u tom slu?aju,
---prikazati nedostaju?u vrednost. 
-
-
-

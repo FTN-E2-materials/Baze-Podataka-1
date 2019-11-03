@@ -1,0 +1,13 @@
+insert into Scena values (1, 'Ljuba Tadic', 950);
+insert into Scena values (1, 'Studio JDP', 210);
+insert into Scena values (2, 'Scena pozorista na Terazijama',500);
+insert into Scena values (3, 'Rade Markovic', 374);
+insert into Scena values (3, 'Nova scena', 129);
+insert into Scena values (4, 'Rasa Plaovic', 297);
+insert into Scena values (4, 'Velika scena', 544);
+insert into Scena values (5, 'Scena Joakim Vujic', 240);
+insert into Scena values (6, 'Ljetnja pozornica - Tivat', 1026);
+insert into Scena values (6, 'Scena Atrijum', 217);
+insert into Scena values (7, 'Veliki oder', 327);
+insert into Scena values (8, 'Scena Narodnog pozorista u Nisu', 513);
+commit;
