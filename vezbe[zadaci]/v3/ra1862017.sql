@@ -231,3 +231,65 @@ select nvl(rp.mbr, 0) "Mbr radnika", nap
 from radproj rp right outer join projekat p
 on rp.spr=p.spr;
 
+
+-- Primer
+--• Prikazati mati?ne brojeve, imena i
+--prezimena radnika, zajedno sa šiframa
+--projekata na kojima rade. Prikazati,
+--tako?e, iste podatke i za radnike koji ne
+--rade ni na jednom projektu, pri ?emu za
+--šifru projekta treba, u tom slu?aju,
+--prikazati nedostaju?u vrednost. 
+
+select r.mbr,r.ime,r.prz,rp.spr
+from radnik r left outer join radproj rp on r.mbr = rp.mbr;
+
+
+--Primer
+--• Prikazati za sve radnike i projekte na
+--kojima rade Mbr, Prz, Ime, Spr i Nap. Za
+--radnike koje ne rade ni na jednom
+--projektu, treba prikazati Mbr, Prz i Ime,
+--dok za vrednosti obeležja Spr i Nap treba
+--zadati, redom, konstante 0 i "Ne postoji".
+--Urediti izlazni rezultat saglasno rastu?im
+--vrednostima obeležja Mbr. 
+
+select r.mbr,r.prz,r.ime,nvl(rp.spr,0),nvl(p.nap,'Ne postoji')
+from radnik r left outer join radproj rp on r.mbr = rp.mbr
+left outer join projekat p on p.spr = rp.spr;
+
+--Primer
+--• Prikazati imena i prezimena svih radnika i
+--prezimena njihovih šefova ako ih imaju.
+--Ako nema šefa ispisati: nema sefa.
+
+
+select r1.ime, r1.prz "Radnik",
+nvl(r2.prz, 'Nema sefa') Sef
+from radnik r1 left outer join radnik r2
+on r1.sef=r2.mbr;
+
+--Zadatak za vežbu
+--• Za svaku satnicu angažovanja (brc),
+--prikazati koliko radnika radi na nekom
+--projektu sa tom satnicom. Rezultate urediti
+--u opadaju?em redosledu satnice.
+
+select brc,count(mbr)
+from radproj
+group by brc
+order by brc desc;
+
+--Zadatak za vežbu
+--• Za svakog radnika prikazati maticni broj, ime, prezime, kao i broj
+--projekata kojima rukovodi, pri cemu je potrebno prikazati iskljucivo
+--one radnike koji su rukovodioci na manjem broju projekata od
+--prosecnog broja projekata na kojima rade radnici cije se prezime
+--ne završava na “ic”.
+
+select r.mbr,r.ime,r.prz,count(pr.spr) "Rukovodi sa ukupno projekata"
+from radnik r left outer join projekat pr on r.mbr = pr.ruk
+group by r.mbr,r.ime,r.prz
+having count(pr.spr) < ( select avg(count(spr)) from radproj rp,radnik r where rp.mbr = r.mbr and prz not like '%ic' group by r.mbr);
+
