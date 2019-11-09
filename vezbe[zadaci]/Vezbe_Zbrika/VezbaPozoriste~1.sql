@@ -104,6 +104,84 @@ left outer join glumac g on p.mbg = g.mbg
 left outer join predstava p on u.idpred = p.idpred
 where u.pol = 'm' and p.nazivpred='Otelo';
 
+-- 3.40
+-- Prikazati maticni broj,ime,prezime i platu glumaca koji zaradjuju vise od glumca
+-- sa maticnim brojem 5
+
+select g1.mbg,g1.imeg,g1.prezg,g1.plata,g2.plata as "PLATA RADNIKA 5"
+from glumac g1,glumac g2
+where g1.plata > g2.plata and g2.mbg = 5;
+
+-- 3.41
+-- Prikazati nazive scena i pozorista kojima pripadaju,
+-- za sve scene ciji broj sedista je u intervalu pluts/minus 20% od broja sedista koje ima
+-- scena Joakim Vujic pozorista Knjazevsko-sprski teatar Kragujevac
+
+select * 
+from scena s,pozoriste p,scena s1,pozoriste p1
+where s.idpoz = p.idpoz and s.brojsed >= s1.brojsed*0.8 and s.brojsed <= s1.brojsed*1.2
+and s1.nazivsce = 'Scena Joakim Vujic'
+and s1.idpoz = p1.idpoz
+and p1.nazivpoz = 'Knjazevsko-srpski teatar Kragujevac';
+
+
+
+-- 3.42
+-- Prikazati identifikator predstave,broj izvodjenja,ukupan kao i prosecan broj gledalaca na svim izvodjenjima predstave
+-- za svaku predstavu.
+
+select idpred,count(rbr) as "broj izvodjenja",sum(brojgled) as "ukupan br. gledalaca",avg(brojgled) as "prosecan br. gledalaca" 
+from prikazivanje
+group by idpred;
+
+-- 3.43
+-- Prikazati identifikator predstave,broj izvodjenja,ukupan kao i prosecan broj gledalaca na svim izodjenjima predstave
+-- ,za sve predstava ciji je broj izvodjenja veci od 4
+
+select idpred,count(rbr) as "broj izvodjenja",sum(brojgled) as "ukupan br. gledalaca",avg(brojgled) as "prosecan br. gledalaca" 
+from prikazivanje
+group by idpred
+having count(rbr) > 4;
+
+
+-- 3.44
+-- Prikazati naziv predstave,broj izvodjenja i prosecan broj gledalaca na svim izvodjenjima predstave
+
+select pred.nazivpred,count(rbr) "br_izvodjenja",avg(brojgled) "prosecan_br_gledalaca"
+from prikazivanje prik,predstava pred
+where prik.idpred = pred.idpred
+group by pred.idpred,pred.nazivpred;
+
+-- 3.45.
+-- Za svaku predstavu prikazati minimalni i maksimalni broj gledalaca u svim prikazivanjima
+
+select idpred,max(brojgled),min(brojgled)
+from prikazivanje
+group by idpred;
+
+-- 3.46
+-- Prikazati ukupan broj uloga kao i ukupni honorar svih gostujucih glumaca koji su trenutno angazovani u nekoj ulozi u pozoristu
+
+select gl.mbg,gl.imeg,gl.prezg,count(po.imeulo) "Ukupno uloga" ,sum(po.honorar) "Ukupni honorar"
+from glumac gl,podela po
+where gl.status='g' and gl.mbg = po.mbg and po.datump is null
+group by gl.mbg,gl.imeg,gl.prezg;
+--datump je datum prestanka angazovanja glumca na ulozi
+
+-- 3.47
+-- Prikazti za svakog glumca broj uloga u kojima ucestvoje
+
+select g.imeg,g.prezg,count(p.imeulo) broj_uloga
+from glumac g left outer join podela p
+on g.mbg = p.mbg
+group by g.mbg,g.imeg,g.prezg;
+
+
+
+
+
+
+
 
 
 
