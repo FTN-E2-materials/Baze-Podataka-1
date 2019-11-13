@@ -282,14 +282,13 @@ group by brc
 order by brc desc;
 
 --Zadatak za vežbu
---• Za svakog radnika prikazati maticni broj, ime, prezime, kao i broj
---projekata kojima rukovodi, pri cemu je potrebno prikazati iskljucivo
---one radnike koji su rukovodioci na manjem broju projekata od
---prosecnog broja projekata na kojima rade radnici cije se prezime
---ne završava na “ic”.
+--• Za svakog radnika prikazati maticni broj, ime, prezime, kao i broj projekata kojima rukovodi,
+--pri cemu je potrebno prikazati iskljucivo one radnike koji su rukovodioci na manjem broju projekata od prosecnog broja projekata
+--na kojima rade radnici cije se prezime ne završava na “ic”.
 
-select r.mbr,r.ime,r.prz,count(pr.spr) "Rukovodi sa ukupno projekata"
-from radnik r left outer join projekat pr on r.mbr = pr.ruk
-group by r.mbr,r.ime,r.prz
-having count(pr.spr) < ( select avg(count(spr)) from radproj rp,radnik r where rp.mbr = r.mbr and prz not like '%ic' group by r.mbr);
+select mbr,ime, count(spr) as "Vodi projekata"
+from radnik r left outer join projekat p on r.mbr = p.ruk
+group by mbr,ime
+having count(spr) < ( select avg(count(spr)) from radproj rp,radnik r where rp.mbr = r.mbr and prz not like '%ic' group by r.mbr);
+--fora je bila prikazati sve radnike,ne samo rukovodioce
 
