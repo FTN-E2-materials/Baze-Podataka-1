@@ -59,6 +59,63 @@ from radnik r,radproj rp,rad_na_proj rnp
 where r.mbr = rp.mbr and rp.spr = rnp.spr;
 
 
+--• Prikazati za svakog radnika angažovanog na projektu mbr, prz, ime, spr i
+--udeo u ukupnom broju ?asova rada na tom projektu 
+--(zaokruženo na dve decimale)
+
+--udeo je njegovo angazovanje na tom projektu / ukupno angazovanje svih radnika na tom projektu
+with angz_na_proj as ( select rp.spr,sum(rp.brc) ukupno_ang from radproj rp group by rp.spr)
+select r.mbr,r.prz,r.ime,rp.spr,round(rp.brc/ang.ukupno_ang,2) as Udeo
+from radnik r,radproj rp,angz_na_proj ang
+where r.mbr = rp.mbr and rp.spr = ang.spr ;
+
+--• Prikazati mbr, ime, prz, plt radnika ?iji je broj sati angažovanja na nekom projektu ve?i od
+--prose?nog broja sati angažovanja na tom projektu
+
+with avg_ang as ( select rp.spr,avg(rp.brc) as prosecno_angazovanje from radproj rp group by rp.spr) 
+select distinct r.mbr,r.ime,r.prz,r.plt
+from radnik r,radproj rp1,avg_ang ang
+where r.mbr = rp1.mbr and rp1.spr = ang.spr and rp1.brc > ang.prosecno_angazovanje;
+
+--njihovo resenje na slajdu 180 mi nije bas najasnije
+--slajd 180
+--with projinfo as (
+--select spr, avg(brc) prosek
+--from radproj group by spr)
+--select distinct r.mbr, r.ime, r.prz, r.plt
+--from radnik r, radproj rp, projinfo pi
+--where r.mbr=rp.mbr and rp.spr=pi.spr
+--group by r.mbr, r.ime, r.prz, r.plt, pi.spr
+--having avg(rp.brc)>(select prosek from projinfo pi2
+--where pi2.spr=pi.spr);
+
+--• Prikazati mbr, ime, prz, plt radnika ?iji je broj sati angažovanja na nekom projektu 
+--ve?i od prose?nog angažovanja na svim projektima
+-- ja sam radio preko vise with-a
+with projinfo as 
+(
+    select rp.spr,avg(rp.brc) as prosek from radproj rp group by rp.spr
+),
+prosecno_ang as
+(
+    --prosecno_ang ce imati info o prosecnom angazovanju na svim projektima
+    select round(avg(pi.prosek),3) as prosecno_na_svim_pr
+    from projinfo pi
+)
+select distinct r.mbr,r.ime,r.prz,r.plt
+from radnik r,radproj rp,prosecno_ang pan
+where r.mbr = rp.mbr and rp.brc > pan.prosecno_na_svim_pr;
+
+
+-- njihovo resenje,slajd 181
+with projinfo as ( select spr, avg(brc) pros from radproj group by spr)
+select distinct r.mbr, r.ime, r.prz, r.plt
+from radnik r, radproj rp, projinfo pi
+where r.mbr=rp.mbr and rp.spr=pi.spr
+group by r.mbr, r.ime, r.prz, r.plt, pi.spr
+having avg(rp.brc)>(select avg(pros) from projinfo);
+
+
 
 
 
