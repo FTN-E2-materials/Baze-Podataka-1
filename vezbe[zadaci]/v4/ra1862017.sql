@@ -115,14 +115,48 @@ where r.mbr=rp.mbr and rp.spr=pi.spr
 group by r.mbr, r.ime, r.prz, r.plt, pi.spr
 having avg(rp.brc)>(select avg(pros) from projinfo);
 
+--• Prikazati mbr, ime i prz rukovodilaca projekata
+--kao i ukupan broj radnika kojima rukovode na projektima
+
+--moram da saznam na kom je projektu koji rukovodilac
+with rukovodioci as(
+    select p.spr,p.nap,r.mbr,r.ime,r.prz
+    from projekat p,radnik r
+    where p.ruk = r.mbr
+    order by p.spr
+),br_rad_na_pr as
+(
+    --moram da saznam koliko je radnika na kom projektu
+    select rp3.spr,count(rp3.mbr) as br_rad
+    from radproj rp3
+    group by rp3.spr
+)
+select rk.mbr,rk.ime,rk.prz,sum(nvl(brnp.br_rad,0)) as rukovodi_sa_ukupno_radnika
+from rukovodioci rk left outer join br_rad_na_pr brnp on rk.spr = brnp.spr
+group by rk.mbr,rk.ime,rk.prz;
 
 
+--• Koliko je ukupno angažovanje svih šefova na
+--projektima?
 
-
-
-
-
-
+with sefovi as
+(
+--nadjem sefove
+    select distinct rp2.mbr,r3.ime,r3.prz
+    from radproj rp2,radnik r2,radnik r3
+    where rp2.mbr=r2.sef and r2.sef = r3.mbr
+    order by rp2.mbr
+),angazovanje as
+(
+--nadjem koliko su oni ukupno angazovani(svaki od njih zasebno)
+    select sef.mbr,ime,prz,sum(brc) angazovanje_sefa
+    from sefovi sef,radproj rp
+    where sef.mbr = rp.mbr
+    group by sef.mbr,ime,prz
+    order by sef.mbr
+)-- i na kraju samo saberem sve to angazovanje
+select sum(angazovanje_sefa)
+from angazovanje;
 
 
 
