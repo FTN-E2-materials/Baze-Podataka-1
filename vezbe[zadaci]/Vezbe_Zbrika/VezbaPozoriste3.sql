@@ -107,7 +107,63 @@ where prik.idpred = p.idpred
 group by prik.idpred,p.nazivpred,prik.datumpri,prik.brojgled
 having prik.brojgled = ( select max(pru.brojgled) from prikazivanje pru where pru.idpred = prik.idpred);
 
+-- 3.68
+-- Prikazati najstarijeg glumca
 
+--najstariji je onaj sa sto manjim datumr
+select najstariji.mbg,najstariji.imeg,najstariji.prezg,najstariji.datumr
+from glumac najstariji
+where not exists ( select * from glumac g where g.datumr < najstariji.datumr) ;
+
+-- 3.69
+-- Prikazati glumce koji,za sada,ne ucestvuju ni u jednoj predstavi.
+
+select *
+from glumac g
+where not exists ( select * from podela p where p.mbg = g.mbg);
+
+-- 3.70
+-- Za svakog glumca priakzati naziv predstave i uloge u predstavi,za koju je dobio najveci honorar
+with max_hon as
+(-- za koju predstavu je dobio najveci honorar
+    select po.mbg,max(nvl(po.honorar,0)) as max_honorar
+    from podela po
+    group by po.mbg
+)
+select g.imeg,g.prezg,p.imeulo,pr.nazivpred,mh.max_honorar
+from max_hon mh,podela p,predstava pr,glumac g
+where mh.mbg = p.mbg and mh.max_honorar = p.honorar and p.idpred = pr.idpred and mh.mbg = g.mbg;
+-- sad to spojim opet s podelom,preko honorar i mbg i dobijem o kojoj je predstavi je rec(tj njen id )
+-- i onda preko tog id-a spojim sa predstavom da bi dobio naziv te predstave
+-- i jos samo dodam glumca da bi dobio info o njegovom imenu i prezimenu
+
+-- 3.71
+-- Prikazati glumce ciji je honorar za ulogu u predstavi
+-- veci od prosecnog honorara za tu predstavu
+-- uvecan za 20%
+
+with prosecan_hon as
+(--nadjem koliki je prosecan honorar za svaku predstavu
+    select po.idpred,round(avg(po.honorar),2) as prosek  --dodao round(radi lepseg izgleda samo )
+    from podela po
+    group by po.idpred
+)--prikazem glumce koji imaju honorar veci od tog proseka
+select gl.mbg,gl.imeg,gl.prezg,pl.honorar
+from prosecan_hon ph,podela pl,glumac gl
+where ph.idpred = pl.idpred and pl.honorar > ph.prosek *1.2 and pl.mbg = gl.mbg;
+
+-- 3.72
+-- Prikazati pozorista cija najveca scena moze da primi vise od 500 gledalaca
+
+with scena_info as
+(
+    select sc.idpoz,max(sc.brojsed) najvise_gled
+    from scena sc
+    group by sc.idpoz
+)
+select p.nazivpoz,si.najvise_gled
+from scena_info si,pozoriste p
+where si.najvise_gled > 500 and si.idpoz = p.idpoz;
 
 
 
