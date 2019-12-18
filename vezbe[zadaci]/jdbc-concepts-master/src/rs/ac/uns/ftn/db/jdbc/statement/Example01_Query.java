@@ -30,18 +30,17 @@ public class Example01_Query {
 					+ " from radnik left outer join radproj on radnik.mbr = radproj.mbr"
 					+ " group by radnik.mbr, ime, prz" + " having count(spr)<3"
 					+ " order by br_projekata desc, mbr asc";
-			resultSet = statement.executeQuery(query);
+			resultSet = statement.executeQuery(query);							// vracamo podatke u objekat resultSet
 
 			System.out.printf("%-4s %-8s %-8s %-2s\n", "MBR", "IME", "PREZIME", "BROJ_PROJEKATA");
 
 			// resultSet.next() method returns false if there are no more rows
 			while (resultSet.next()) {
 				int mbr = resultSet.getInt("mbr");
-				String ime = resultSet.getString(2); // Enumeration starts at 1
-				String prezime = resultSet.getString("prezime"); // 'prz' cannot be used because alias is defined
-				int broj_projekata = resultSet.getInt("br_projekata"); // either number or alias must be used used for
+				String ime = resultSet.getString(2); 					// Enumeration starts at 1
+				String prezime = resultSet.getString("prezime"); 		// 'prz' cannot be used because alias is defined
+				int broj_projekata = resultSet.getInt("br_projekata"); 	// either number or alias must be used used for
 																		// expression based columns
-
 				System.out.printf("%-4d %-8.8s %-8.8s %-2d\n", mbr, ime, prezime, broj_projekata);
 			}
 

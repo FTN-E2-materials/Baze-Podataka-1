@@ -65,7 +65,7 @@ public class Example04_DDL_DML_QL {
 	private static void selectAll() throws SQLException {
 		String query = "select spr, sfp, rukfp, nafp, datp from faze_projekta";
 
-		try (Connection connection = ConnectionUtil_Basic.getConnection();
+		try (	Connection connection = ConnectionUtil_Basic.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);
 				ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -82,7 +82,7 @@ public class Example04_DDL_DML_QL {
 	private static void selectBySprAndSfp() throws SQLException {
 		String query = "select * from faze_projekta where spr = ? and sfp = ?";
 
-		try (Connection connection = ConnectionUtil_Basic.getConnection();
+		try (	Connection connection = ConnectionUtil_Basic.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 
 			System.out.println("SPR: ");
@@ -100,10 +100,10 @@ public class Example04_DDL_DML_QL {
 						System.out.printf("%-4s %-4s %-6s %-20s %-21s\n", resultSet.getString(1),
 								resultSet.getString(2), resultSet.getString(3), resultSet.getString(4),
 								resultSet.getString(5));
-					}
-				}
-			}
-		}
+					}			/* kraj while */
+				}				/* kraj if-a */
+			}					/* kraj ugnjezdenog try-a */
+		} 						/* kraj velikog try-a */
 
 	}
 
@@ -121,7 +121,7 @@ public class Example04_DDL_DML_QL {
 
 		String command = "insert into faze_projekta (spr, sfp, rukfp, nafp, datp) values (?, ?, ?, ?, to_date(?, 'dd.MM.yyyy.'))";
 
-		try (Connection connection = ConnectionUtil_Basic.getConnection();
+		try (	Connection connection = ConnectionUtil_Basic.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(command);) {
 			preparedStatement.setInt(1, Integer.parseInt(spr));
 			preparedStatement.setInt(2, Integer.parseInt(sfp));

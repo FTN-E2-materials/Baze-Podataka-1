@@ -14,10 +14,9 @@ public class Example02_QueryWithParams {
 
 		String query = "select mbr, ime, prz from radnik where ime like ? and prz like ?";
 
-		try (Scanner sc = new Scanner(System.in);
+		try (	Scanner sc = new Scanner(System.in);
 				Connection connection = ConnectionUtil_Basic.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
-
 			String answer;
 
 			do {

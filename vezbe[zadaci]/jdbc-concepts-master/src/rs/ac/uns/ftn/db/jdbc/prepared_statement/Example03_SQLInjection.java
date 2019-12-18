@@ -15,7 +15,7 @@ public class Example03_SQLInjection {
 
 		String query = "select username, password from jdbc_users where username= ? and password= ?";
 
-		try (Scanner sc = new Scanner(System.in);
+		try (	Scanner sc = new Scanner(System.in);
 				Connection connection = ConnectionUtil_Basic.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 

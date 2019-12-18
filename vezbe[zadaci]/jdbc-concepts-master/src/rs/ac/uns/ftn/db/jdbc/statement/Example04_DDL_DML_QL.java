@@ -163,7 +163,7 @@ public class Example04_DDL_DML_QL {
 		try (Connection connection = ConnectionUtil_Basic.getConnection();
 				Statement statement = connection.createStatement();) {
 
-			return statement.executeUpdate(command);
+			return statement.executeUpdate(command);							//DML iskazi se izvrsavaju pozivom ove metode
 		}
 	}
 
@@ -171,7 +171,7 @@ public class Example04_DDL_DML_QL {
 		try (Connection connection = ConnectionUtil_Basic.getConnection();
 				Statement statement = connection.createStatement();) {
 
-			return statement.execute(command);
+			return statement.execute(command);									//DDL iskazi se izvrsavaju pozivom ove metode
 		}
 	}
 

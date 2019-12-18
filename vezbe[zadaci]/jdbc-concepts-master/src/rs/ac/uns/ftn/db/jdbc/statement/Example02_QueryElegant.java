@@ -10,7 +10,7 @@ import rs.ac.uns.ftn.db.jdbc.connection.ConnectionUtil_Basic;
 public class Example02_QueryElegant {
 
 	public static void main(String[] args) {
-		try (Connection connection = ConnectionUtil_Basic.getConnection();
+		try (	Connection connection = ConnectionUtil_Basic.getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery(generateQuery())) {
 
@@ -19,10 +19,10 @@ public class Example02_QueryElegant {
 
 			while (resultSet.next()) {
 				int mbr = resultSet.getInt("mbr");
-				String ime = resultSet.getString(2); // Enumeration starts at 1
-				String prezime = resultSet.getString("prezime"); // 'prz' cannot be used because alias is defined
-				int broj_projekata = resultSet.getInt("br_projekata"); // either number or alias must be used used for
-																		// expression-based columns
+				String ime = resultSet.getString(2); 						// Enumeration starts at 1
+				String prezime = resultSet.getString("prezime"); 			// 'prz' cannot be used because alias is defined
+				int broj_projekata = resultSet.getInt("br_projekata"); 		// either number or alias must be used used for
+																			// expression-based columns
 
 				System.out.printf("%-4d %-8.8s %-8.8s %-2d\n", mbr, ime, prezime, broj_projekata);
 			}

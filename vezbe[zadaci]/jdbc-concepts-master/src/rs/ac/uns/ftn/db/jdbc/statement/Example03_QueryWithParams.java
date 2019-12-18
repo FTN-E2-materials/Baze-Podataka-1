@@ -11,11 +11,11 @@ import rs.ac.uns.ftn.db.jdbc.connection.ConnectionUtil_Basic;
 public class Example03_QueryWithParams {
 
 	public static void main(String[] args) {
-		try (Connection connection = ConnectionUtil_Basic.getConnection();
+		try (	Connection connection = ConnectionUtil_Basic.getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(generateQuery())) {
+				ResultSet resultSet = statement.executeQuery(generateQuery()) 	) {
 
-			if (!resultSet.isBeforeFirst()) { // check if any data matches criteria
+			if (!resultSet.isBeforeFirst()) { 							// check if any data matches criteria
 				System.out.println("No data found!");
 			} else {
 				System.out.printf("%-4s %s\n", "SPR", "NAZIV PROJEKTA");

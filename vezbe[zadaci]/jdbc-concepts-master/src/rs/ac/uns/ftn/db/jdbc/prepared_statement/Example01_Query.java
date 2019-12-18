@@ -9,7 +9,7 @@ import rs.ac.uns.ftn.db.jdbc.connection.ConnectionUtil_Basic;
 public class Example01_Query {
 
 	public static void main(String[] args) {
-		try (Connection connection = ConnectionUtil_Basic.getConnection();
+		try (	Connection connection = ConnectionUtil_Basic.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(generateQuery());
 				ResultSet resultSet = preparedStatement.executeQuery()) {
 

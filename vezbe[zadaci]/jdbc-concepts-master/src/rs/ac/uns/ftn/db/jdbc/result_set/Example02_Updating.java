@@ -34,12 +34,12 @@ public class Example02_Updating {
 						ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				ResultSet resultSet = preparedStatement.executeQuery()) {
 
-			resultSet.absolute(1); // holds current max value for the primary key (order by desc used)
+			resultSet.absolute(1); 						// holds current max value for the primary key (order by desc used)
 			int currentMaxSprValue = resultSet.getInt(1);
-			sprValue = currentMaxSprValue + 10; // calculate next value for the primary key
+			sprValue = currentMaxSprValue + 10; 		// calculate next value for the primary key
 
-			resultSet.moveToInsertRow(); // a special row, a buffer, which can be used to build up the row until all
-											// column values have been set on the row
+			resultSet.moveToInsertRow(); 				// a special row, a buffer, which can be used to build up the row until all
+														// column values have been set on the row
 			
 			// set values for new row
 			resultSet.updateInt(1, sprValue);
