@@ -36,7 +36,7 @@ public class ComplexFuncionalityService {
 		System.out.println(Pozoriste.getFormattedHeader());
 
 		try {
-			for (Pozoriste pozoriste : pozoristeDAO.findAll()) {
+			for (Pozoriste pozoriste : pozoristeDAO.findAll()) {								//prolazak kroz sva pozorista
 				System.out.println(pozoriste);
 				System.out.println("\t\t----------------------- SCENE -----------------------");
 
