@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.db.jdbc.exam.connection;
+package rs.ac.uns.ftn.db.jdbc.pozoriste.connection;
 
 public class ConnectionParams {
 	public static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
