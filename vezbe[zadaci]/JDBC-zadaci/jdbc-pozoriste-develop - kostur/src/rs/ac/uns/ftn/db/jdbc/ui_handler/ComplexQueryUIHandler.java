@@ -65,7 +65,7 @@ public class ComplexQueryUIHandler {
 				// TODO implementirati
 				break;
 			case "4":
-				// TODO implementirati
+				kompleksniUpitServis.prikaziNajposecenijePredstave();
 				break;
 			case "5":
 				// TODO implementirati

@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import rs.ac.uns.ftn.db.jdbc.pozoriste.connection.HikariCP;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PredstavaDAO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PredstavaDTO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Predstava;
 
 public class PredstavaDAOImpl implements PredstavaDAO {
@@ -88,4 +91,34 @@ public class PredstavaDAOImpl implements PredstavaDAO {
 
 	}
 
+	@Override
+	public List<PredstavaDTO> nadjiNajposecenijePredstave() throws SQLException {
+		List<PredstavaDTO> result = new ArrayList<PredstavaDTO>();
+		String upit = "SELECT idpred ,nazivpred, AVG(Pr.brojgled) FROM Predstava P, Prikazivanje Pr WHERE P.idpred = Pr.predstava_idpred GROUP BY P.idpred, nazivpred HAVING AVG(brojgled) >= ALL(SELECT AVG(brojgled)  FROM Predstava P, Prikazivanje Pr  WHERE P.idpred = Pr.predstava_idpred GROUP BY P.idpred)";
+		
+		try(Connection connection = HikariCP.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(upit);
+			){
+			
+			try(ResultSet resultSet = preparedStatement.executeQuery()){
+				while(resultSet.next()) {
+					PredstavaDTO predstava = new PredstavaDTO(resultSet.getInt(1), resultSet.getString(2),
+							resultSet.getDouble(3));
+					result.add(predstava);
+				}
+				
+			}
+			
+		}
+		
+		
+		return result;
+	}
+
+	
+	
+	
+	
+	
+	
 }

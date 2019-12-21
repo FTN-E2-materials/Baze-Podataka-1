@@ -7,15 +7,19 @@ import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PozoristeDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PredstavaDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PrikazivanjeDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.ScenaDAO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.UlogaDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.PozoristeDAOImpl;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.PredstavaDAOImpl;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.PrikazivanjeDAOImpl;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.ScenaDAOImpl;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.UlogaDAOImpl;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PredstavaDTO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PrikazivanjeDTO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Predstava;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Prikazivanje;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Scena;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Uloga;
 
 /**
  * Klasa u kojoj se implementiraju metode koje izvrsavaju kompleksne upita
@@ -30,7 +34,9 @@ public class KompleksneFunkcionalnostiServis {
 	private static final ScenaDAO scenaDAO = new ScenaDAOImpl();
 	private static final PrikazivanjeDAO prikazivanjeDAO = new PrikazivanjeDAOImpl();
 	private static final PredstavaDAO predstavaDAO = new PredstavaDAOImpl();
-
+	private static final UlogaDAO ulogaDAO = new UlogaDAOImpl();
+	
+	
 	/**
 	 * Metoda koja prikazuje sve scene odgovarajuceg pozorista
 	 */
@@ -87,6 +93,29 @@ public class KompleksneFunkcionalnostiServis {
 			}
 			
 			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+
+	public void prikaziNajposecenijePredstave() {
+		
+		try {
+			for(PredstavaDTO p: predstavaDAO.nadjiNajposecenijePredstave()) {
+				System.out.println("IDPRED \t NAZIV\t PROSECNO_TRAJANJE");
+				System.out.println(p.toString());
+				System.out.println("\t\t---------------ULOGE-----------------");
+				for(Uloga u: ulogaDAO.pronadjiUlogePredstave(p.getIdpred())) {
+					System.out.println("\t\t" + Uloga.getFormattedHeader());
+					System.out.println("\t\t" + u.toString());
+				}
+				
+				System.out.println("\t\t---------UKUPAN BROJ ZENSKIH ULOGA------------");
+				System.out.println("\t\t" + ulogaDAO.nadjiBrojUlogaPola(p.getIdpred(),"z"));
+				System.out.println("\t\t" + ulogaDAO.nadjiBrojUlogaPola(p.getIdpred(),"m"));
+				
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
