@@ -1,7 +1,16 @@
 package rs.ac.uns.ftn.db.jdbc.ui_handler;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PozoristeDAO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.PozoristeDAOImpl;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
+
 public class PozoristeUIHandler {
 
+	private static final PozoristeDAO pozoristeDAO = new PozoristeDAOImpl();
 
 	public void handlePozoristeMenu() {
 		String answer;
@@ -43,29 +52,123 @@ public class PozoristeUIHandler {
 	}
 
 	private void showAll() {
-
-
+		System.out.println(Pozoriste.getFormattedHeader());
+		
+		try {
+			for(Pozoriste pozoriste : pozoristeDAO.findAll()) {
+				System.out.println(pozoriste);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
+	
 	private void showById() {
-
+		System.out.println("IDPOZ: ");
+		int id = Integer.parseInt(MainUIHandler.sc.nextLine());				// posto se sc - scaner nalazi u MainUIHandler
+																			// samo uzmemo sledecu liniju ( unos )
+		
+		try {
+			Pozoriste pozoriste = pozoristeDAO.findById(id);
+			System.out.println(Pozoriste.getFormattedHeader());
+			System.out.println(pozoriste);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 
+	
 	private void handleSingleInsert() {
+		System.out.println("IDPOZ: ");
+		int id = Integer.parseInt(MainUIHandler.sc.nextLine());
+
+		System.out.println("Naziv: ");
+		String naziv = MainUIHandler.sc.nextLine();
+
+		System.out.println("Adresa: ");
+		String adresa = MainUIHandler.sc.nextLine();
+
+		System.out.println("Sajt: ");
+		String sajt = MainUIHandler.sc.nextLine();
+		
+		System.out.println("Mesto: ");
+		String mesto = MainUIHandler.sc.nextLine();
+
+		try {
+			pozoristeDAO.save(new Pozoriste(id, naziv, adresa, sajt,mesto));
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
 
+	
 	private void handleUpdate() {
-
+		System.out.println("IDPOZ: ");
+		int id = Integer.parseInt(MainUIHandler.sc.nextLine());
+			try {
+				if(!pozoristeDAO.existsById(id)) {				// ako ne postoji, znaci da neko pokusava da ubaci neki podatak
+					System.out.println("Uneti id ne postoji !");
+					return;
+				}
+				
+				System.out.println("Naziv: ");
+				String naziv = MainUIHandler.sc.nextLine();
+				
+				System.out.println("Adresa: ");
+				String adresa = MainUIHandler.sc.nextLine();
+				
+				System.out.println("Sajt: ");
+				String sajt = MainUIHandler.sc.nextLine();
+				
+				System.out.println("Mesto: ");
+				String mesto = MainUIHandler.sc.nextLine();
+				
+				pozoristeDAO.save(new Pozoriste(id,naziv,adresa,sajt,mesto));
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+				
 	}
 
 	private void handleDelete() {
+		System.out.println("IDPOZ: ");
+		int id = Integer.parseInt(MainUIHandler.sc.nextLine());
 
+		try {
+			pozoristeDAO.deleteById(id);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
-	private void handleMultipleInserts() {
 	
+	private void handleMultipleInserts() {
+		List<Pozoriste> pozoristeList = new ArrayList<>();
+		String answer;
+		do {
+			System.out.println("IDPOZ: ");
+			int id = Integer.parseInt(MainUIHandler.sc.nextLine());
+
+			System.out.println("Naziv: ");
+			String naziv = MainUIHandler.sc.nextLine();
+
+			System.out.println("Adresa: ");
+			String adresa = MainUIHandler.sc.nextLine();
+
+			System.out.println("Sajt: ");
+			String sajt = MainUIHandler.sc.nextLine();
+			
+			System.out.println("Mesto: ");
+			String mesto = MainUIHandler.sc.nextLine();
+
+			pozoristeList.add(new Pozoriste(id, naziv, adresa, sajt,mesto));
+
+			System.out.println("Prekinuti unos? X za potvrdu");
+			answer = MainUIHandler.sc.nextLine();
+		}while(!answer.equalsIgnoreCase("X"));
 
 	}
 

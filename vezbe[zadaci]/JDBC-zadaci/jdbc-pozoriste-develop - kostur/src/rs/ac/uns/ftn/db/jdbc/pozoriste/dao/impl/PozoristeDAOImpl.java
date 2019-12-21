@@ -110,7 +110,7 @@ public class PozoristeDAOImpl implements PozoristeDAO {
 	 */
 	@Override
 	public Iterable<Pozoriste> findAll() throws SQLException {
-		String upit = "select idpoz, nazivpoz, adresapoz, sajt, idmes from pozoriste";
+		String upit = "select idpoz, nazivpoz, adresapoz, sajt, mesto_idm from pozoriste";
 		List<Pozoriste> pozoristeList = new ArrayList<Pozoriste>();
 		
 		try(Connection connection = HikariCP.getConnection();
@@ -139,7 +139,7 @@ public class PozoristeDAOImpl implements PozoristeDAO {
 		List<Pozoriste> pozoristeList = new ArrayList<>();
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		String pocetakUpita = "select idpoz, nazivpoz,adresapoz,sajt,idmes from pozoriste where idpoz in(";
+		String pocetakUpita = "select idpoz, nazivpoz,adresapoz,sajt,mesto_idm from pozoriste where idpoz in(";
 		stringBuilder.append(pocetakUpita);
 		
 		// koliko imam ID-eva toliko stavim upitnika u moj upit
@@ -181,7 +181,7 @@ public class PozoristeDAOImpl implements PozoristeDAO {
 	 */
 	@Override
 	public Pozoriste findById(Integer id) throws SQLException {
-		String query = "select idpoz, nazivpoz, adresapoz, sajt, idmes from pozoriste where idpoz = ?";
+		String query = "select idpoz, nazivpoz, adresapoz, sajt, mesto_idm from pozoriste where idpoz = ?";
 		Pozoriste pozoriste = null;
 		
 		try(Connection connection = HikariCP.getConnection();
@@ -206,8 +206,8 @@ public class PozoristeDAOImpl implements PozoristeDAO {
 	 */
 	@Override
 	public void save(Pozoriste entity) throws SQLException {
-		String insertCommand = "insert into pozoriste (nazivpoz, adresapoz, sajt, idmes, idpoz) values (?, ?, ?, ?, ?, ?)";
-		String updateCommand = "update pozoriste set nazivpoz=?, adresa=?, sajt=?, idmes=? where idpoz=?";
+		String insertCommand = "insert into pozoriste (nazivpoz, adresapoz, sajt, mesto_idm, idpoz) values (?, ?, ?, ?, ?)";
+		String updateCommand = "update pozoriste set nazivpoz=?, adresa=?, sajt=?, mesto_idm=? where idpoz=?";
 				
 		int i = 0;							// inkrementer za postavljanje vrednosti umesto upitnika
 		
@@ -233,8 +233,8 @@ public class PozoristeDAOImpl implements PozoristeDAO {
 	 */
 	@Override
 	public void saveAll(Iterable<Pozoriste> entities) throws SQLException {
-		String insertCommand = "insert into pozoriste (nazivpoz,adresapoz,sajt,idmes,idpoz) values (?, ?, ?, ?, ?)";
-		String updateCommand = "update pozoriste set nazivpoz = ?, adresa=?, sajt=?, idmes=? where ipoz=?";
+		String insertCommand = "insert into pozoriste (nazivpoz,adresapoz,sajt,mesto_idm,idpoz) values (?, ?, ?, ?, ?)";
+		String updateCommand = "update pozoriste set nazivpoz = ?, adresa=?, sajt=?, mesto_idm=? where ipoz=?";
 		
 		try(Connection connection = HikariCP.getConnection();
 			PreparedStatement preparedStatementUpdate = connection.prepareStatement(updateCommand);
