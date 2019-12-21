@@ -1,9 +1,15 @@
 package rs.ac.uns.ftn.db.jdbc.ui_handler;
 
+import rs.ac.uns.ftn.db.jdbc.pozoriste.service.KompleksneFunkcionalnostiServis;
 
 public class ComplexQueryUIHandler {
 
-
+	// Pravim objekat klase KompleksneFunkcionalnostiServis kako bih pozivao metode iz te klase
+	// a te metode izvrsavaju ove zadatke
+	
+	private static final KompleksneFunkcionalnostiServis kompleksniUpitServis = new KompleksneFunkcionalnostiServis();
+	
+	
 	public void handleComplexQueryMenu() {
 		String answer;
 		do {
@@ -11,7 +17,7 @@ public class ComplexQueryUIHandler {
 			System.out.println(
 					"\n1 - Za svako pozoriste prikazati listu scena koje ima. Ukoliko pozoriste nema scenu ispisati: NEMA SCENE");
 			System.out.println(
-					"\n2 - Prikazati informacije o predstavama koje se prikazuju. Pored osnovnih informacija o predstavama prikazati sva prikazivanja za svaku od njih. Za svako pozoriste prikazati ukupan broj gledalaca, prosecan broj gledalaca i broj prikazivanja.");
+					"\n2 - Prikazati informacije o predstavama koje se prikazuju. Pored osnovnih informacija o predstavama prikazati sva prikazivanja za svaku od njih. Za svaku predstavu prikazati ukupan broj gledalaca, prosecan broj gledalaca i broj prikazivanja.");
 
 			System.out.println(
 					"\n3 - Prikazati nazive scena i broj sedista za sve scene ciji broj sedista je u intervalu plus/minus 20% od broja sedista"
@@ -50,10 +56,10 @@ public class ComplexQueryUIHandler {
 
 			switch (answer) {
 			case "1":
-				// TODO implementirati
+				kompleksniUpitServis.prikaziListuScena();
 				break;
 			case "2":
-				// TODO implementirati
+				kompleksniUpitServis.prikaziPrikazivanePredstave();
 				break;
 			case "3":
 				// TODO implementirati
