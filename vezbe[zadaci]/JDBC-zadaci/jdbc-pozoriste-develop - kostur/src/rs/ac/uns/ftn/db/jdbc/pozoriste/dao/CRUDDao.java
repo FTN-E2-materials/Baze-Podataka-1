@@ -1,6 +1,14 @@
 package rs.ac.uns.ftn.db.jdbc.pozoriste.dao;
 
 import java.sql.SQLException;
+/*
+ * Genericki interfejs koji treba da se implementira za odredjeni model
+ * Svaki model ima svoj reprezentativan DAO u koji ce smestati podatke
+ * 
+ * Za kolokvijum je potrebno znati implementirati ( svaku metodu Overide-ovati ) DAO
+ * za jedan model u potpunosti
+ */
+
 
 public interface CRUDDao<T, ID> {
 
