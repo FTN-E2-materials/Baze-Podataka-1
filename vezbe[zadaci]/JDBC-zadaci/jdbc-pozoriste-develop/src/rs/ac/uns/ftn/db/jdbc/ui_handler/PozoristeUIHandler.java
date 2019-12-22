@@ -150,7 +150,7 @@ public class PozoristeUIHandler {
 		do {
 			System.out.println("IDPOZ: ");
 			int id = Integer.parseInt(MainUIHandler.sc.nextLine());
-
+     
 			System.out.println("Naziv: ");
 			String naziv = MainUIHandler.sc.nextLine();
 

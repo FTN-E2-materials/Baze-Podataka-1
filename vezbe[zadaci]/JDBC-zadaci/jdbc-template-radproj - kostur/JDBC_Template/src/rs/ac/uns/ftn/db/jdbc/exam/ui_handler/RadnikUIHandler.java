@@ -1,7 +1,18 @@
 package rs.ac.uns.ftn.db.jdbc.exam.ui_handler;
 
+//import java.sql.Date;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import rs.ac.uns.ftn.db.jdbc.exam.dao.RadnikDAO;
+import rs.ac.uns.ftn.db.jdbc.exam.model.Radnik;
+import rs.ac.uns.ftn.fb.jdbc.exam.dao.impl.RadnikDAOImpl;
+
 public class RadnikUIHandler {
-	// private static final RadnikDAO radnikDAO = new RadnikDAOImpl();
+	private static final RadnikDAO radnikDAO = new RadnikDAOImpl();
 
 	public void handleRadnikMenu() {
 		String answer;
@@ -13,6 +24,7 @@ public class RadnikUIHandler {
 			System.out.println("4 - Unos vise");
 			System.out.println("5 - Izmena po identifikatoru");
 			System.out.println("6 - Brisanje po identifikatoru");
+			System.out.println("7 - Prikaz svih odredjenih id-eva");
 			System.out.println("X - Izlazak iz rukovanja radnicima");
 
 			answer = MainUIHandler.sc.nextLine();
@@ -36,14 +48,39 @@ public class RadnikUIHandler {
 			case "6":
 				handleDelete();
 				break;
-
+			case "7":
+				showAllById();
+				break;
 			}
 
 		} while (!answer.equalsIgnoreCase("X"));
 	}
-
 	private void showAll() {
-
+		
+	}
+	private void showAllById() {
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(10);
+		ids.add(20);
+		
+		try {
+			Iterable<Radnik> radnici = radnikDAO.findAllById(ids);
+			for(Radnik radnik : radnici) {
+				System.out.println(radnik);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		try {
+			Radnik radnik = radnikDAO.findById(10);
+			System.out.println(radnik);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	private void showById() {

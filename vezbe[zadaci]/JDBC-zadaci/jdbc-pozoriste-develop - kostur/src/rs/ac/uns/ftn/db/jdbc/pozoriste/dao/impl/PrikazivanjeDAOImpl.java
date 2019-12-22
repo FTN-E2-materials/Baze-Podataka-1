@@ -11,6 +11,7 @@ import java.util.List;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.connection.HikariCP;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PrikazivanjeDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PrikazivanjeDTO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PrikazivanjeDeleteDTO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Predstava;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Prikazivanje;
 
@@ -48,8 +49,22 @@ public class PrikazivanjeDAOImpl implements PrikazivanjeDAO {
 
 	@Override
 	public Iterable<Prikazivanje> findAll() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		String query = "select rbr, datumpri, vremepri, brojgled, predstava_idpred, scena_idsce from prikazivanje";
+		List<Prikazivanje> prikazivanjeList = new ArrayList<Prikazivanje>();
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(query);
+				ResultSet resultSet = preparedStatement.executeQuery()) {
+
+			while (resultSet.next()) {
+				Prikazivanje prikazivanje = new Prikazivanje(resultSet.getInt(1), resultSet.getDate(2),
+						resultSet.getDate(3), resultSet.getInt(4), resultSet.getInt(5), resultSet.getInt(6));
+				prikazivanjeList.add(prikazivanje);
+			}
+
+		}
+		return prikazivanjeList;
+		
 	}
 
 	@Override
@@ -158,7 +173,68 @@ public class PrikazivanjeDAOImpl implements PrikazivanjeDAO {
 		return result;
 	}
 
-	
+	@Override
+	public List<PrikazivanjeDeleteDTO> nadjiPredstaveZaBrisanje() throws SQLException {
+		String query = "select nazivsce,brojsed,pozoriste_idpoz,s.idsce,rbr,datumpri,vremepri,brojgled,predstava_idpred from scena s, prikazivanje p where p.scena_idsce = s.idsce and brojgled>s.brojsed and datumpri>sysdate";
+		List<PrikazivanjeDeleteDTO> result = new ArrayList<PrikazivanjeDeleteDTO>();
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				while (resultSet.next()) {
+
+					PrikazivanjeDeleteDTO prikazivanje = new PrikazivanjeDeleteDTO(resultSet.getString(1),
+							resultSet.getInt(2), resultSet.getInt(3), resultSet.getInt(4), resultSet.getInt(5),
+							resultSet.getDate(6), resultSet.getDate(7), resultSet.getInt(8), resultSet.getInt(9));
+					result.add(prikazivanje);
+				}
+			}
+		}
+
+		return result;
+
+	}
+
+	@Override
+	public void obrisiIUbaciUPredstavu(PrikazivanjeDeleteDTO deletedItem) throws SQLException {
+		try ( Connection connection = HikariCP.getConnection()){
+			connection.setAutoCommit(false);
+			obrisiPoID(connection, deletedItem);
+			
+			// koliko cemo napuniti celih sala
+			int n = deletedItem.getBrojgled() / deletedItem.getBrojsed();
+
+			// koliko ostane za poslednju salu koja nece biti puna
+			int last = deletedItem.getBrojgled() % deletedItem.getBrojsed();
+		}
+		
+	}
+
+	@Override
+	public void obrisiPoID(Connection c, PrikazivanjeDeleteDTO deletedItem) throws SQLException {
+		String upit = "delete from prikazivanje where rbr = ?";
+		
+		PreparedStatement preparedStatement = c.prepareStatement(upit);
+		{
+			preparedStatement.setInt(1, deletedItem.getRbr());
+			preparedStatement.executeUpdate();
+		}
+		
+	}
+
+	private int findMaxId() throws SQLException {
+		String query = "select max(rbr) from prikazivanje";
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(query);
+				ResultSet resultSet = preparedStatement.executeQuery()) {
+			if (resultSet.next())
+				return resultSet.getInt(1);
+			else {
+				return -1;
+			}
+		}
+	}
 	
 	
 	

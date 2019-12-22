@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.ScenaDAOImpl;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.impl.UlogaDAOImpl;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PredstavaDTO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PrikazivanjeDTO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PrikazivanjeDeleteDTO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Predstava;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Prikazivanje;
@@ -72,6 +73,7 @@ public class KompleksneFunkcionalnostiServis {
 	/**
 	 * Metoda koja prikazuje predstave koje se prikazuju i sva prikazivanja za tu predstavu
 	 */
+	
 	public void prikaziPrikazivanePredstave() {
 		System.out.println(Predstava.getFormattedHeader());
 		
@@ -122,4 +124,25 @@ public class KompleksneFunkcionalnostiServis {
 		
 	}
 
+	public void prikaziPredstaveZaBrisanje() {
+		try {
+			for(PrikazivanjeDeleteDTO pd: prikazivanjeDAO.nadjiPredstaveZaBrisanje()) {
+				System.out.println(PrikazivanjeDeleteDTO.getFormattedHeader());
+				System.out.println(pd);
+				prikazivanjeDAO.obrisiIUbaciUPredstavu(pd);
+				System.out.println("--------------------Prikazivanje nakon dodavanja:---------------------");
+				System.out.println(Prikazivanje.getFormattedHeader());
+		
+				for (Prikazivanje p : prikazivanjeDAO.findAll()) {
+					System.out.println(p);
+				}
+			
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
