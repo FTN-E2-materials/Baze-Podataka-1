@@ -10,7 +10,7 @@ import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
 
 public class PozoristeUIHandler {
 
-	private static final PozoristeDAO pozoristeDAO = new PozoristeDAOImpl();
+	private static PozoristeDAO pozoristeDAO = new PozoristeDAOImpl();
 
 	public void handlePozoristeMenu() {
 		String answer;
@@ -52,124 +52,117 @@ public class PozoristeUIHandler {
 	}
 
 	private void showAll() {
-		System.out.println(Pozoriste.getFormattedHeader());
-		
 		try {
-			for(Pozoriste pozoriste : pozoristeDAO.findAll()) {
+			System.out.println(Pozoriste.getFormattedHeader());
+
+			for (Pozoriste pozoriste : pozoristeDAO.findAll()) {
 				System.out.println(pozoriste);
 			}
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+
 	}
 
-	
 	private void showById() {
-		System.out.println("IDPOZ: ");
-		int id = Integer.parseInt(MainUIHandler.sc.nextLine());				// posto se sc - scaner nalazi u MainUIHandler
-																			// samo uzmemo sledecu liniju ( unos )
-		
 		try {
-			Pozoriste pozoriste = pozoristeDAO.findById(id);
+			System.out.println("UNESITE IDPOZ: ");
+			int id = Integer.parseInt(MainUIHandler.sc.nextLine());
+
 			System.out.println(Pozoriste.getFormattedHeader());
-			System.out.println(pozoriste);
+			System.out.println(pozoristeDAO.findById(id));
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
 
-	
-	private void handleSingleInsert() {
-		System.out.println("IDPOZ: ");
-		int id = Integer.parseInt(MainUIHandler.sc.nextLine());
-
-		System.out.println("Naziv: ");
-		String naziv = MainUIHandler.sc.nextLine();
-
-		System.out.println("Adresa: ");
-		String adresa = MainUIHandler.sc.nextLine();
-
-		System.out.println("Sajt: ");
-		String sajt = MainUIHandler.sc.nextLine();
-		
-		System.out.println("Mesto: ");
-		String mesto = MainUIHandler.sc.nextLine();
+	private void handleSingleInsert() {// idpoz, nazivpoz, adresapoz, sajt, mesto_idm
 
 		try {
-			pozoristeDAO.save(new Pozoriste(id, naziv, adresa, sajt,mesto));
+			System.out.println("UNESITE IDPOZ: ");
+			int idpoz = Integer.parseInt(MainUIHandler.sc.nextLine());
+
+			if (pozoristeDAO.existsById(idpoz)) {
+				System.out.println("TO POZORISTE VEC POSTOJI, NE MOZES GA OPET UBACITI");
+				return;
+			}
+			System.out.println("NAZIVPOZ: ");
+			String nazivpoz = MainUIHandler.sc.nextLine();
+
+			System.out.println("ADRESAPOZ: ");
+			String adresapoz = MainUIHandler.sc.nextLine();
+
+			System.out.println("SAJT: ");
+			String sajt = MainUIHandler.sc.nextLine();
+
+			System.out.println("MESTO_IDM: ");
+			String mesto_idm = MainUIHandler.sc.nextLine();
+
+			Pozoriste pozoriste = new Pozoriste(idpoz, nazivpoz, adresapoz, sajt, mesto_idm);
+
+			pozoristeDAO.save(pozoriste);
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
 
-	
 	private void handleUpdate() {
-		System.out.println("IDPOZ: ");
-		int id = Integer.parseInt(MainUIHandler.sc.nextLine());
-			try {
-				if(!pozoristeDAO.existsById(id)) {				// ako ne postoji, znaci da neko pokusava da ubaci neki podatak
-					System.out.println("Uneti id ne postoji !");
-					return;
-				}
-				
-				System.out.println("Naziv: ");
-				String naziv = MainUIHandler.sc.nextLine();
-				
-				System.out.println("Adresa: ");
-				String adresa = MainUIHandler.sc.nextLine();
-				
-				System.out.println("Sajt: ");
-				String sajt = MainUIHandler.sc.nextLine();
-				
-				System.out.println("Mesto: ");
-				String mesto = MainUIHandler.sc.nextLine();
-				
-				pozoristeDAO.save(new Pozoriste(id,naziv,adresa,sajt,mesto));
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+		try {
+			System.out.println("UNESITE IDPOZ: ");
+			int idpoz = Integer.parseInt(MainUIHandler.sc.nextLine());
+
+			if (!pozoristeDAO.existsById(idpoz)) {
+				System.out.println("TO POZORISTE NE POSTOJI, NE MOZES GA MENJATI AKO NE POSTOJI");
+				return;
 			}
-				
+			System.out.println("NAZIVPOZ: ");
+			String nazivpoz = MainUIHandler.sc.nextLine();
+
+			System.out.println("ADRESAPOZ: ");
+			String adresapoz = MainUIHandler.sc.nextLine();
+
+			System.out.println("SAJT: ");
+			String sajt = MainUIHandler.sc.nextLine();
+
+			System.out.println("MESTO_IDM: ");
+			String mesto_idm = MainUIHandler.sc.nextLine();
+
+			Pozoriste pozoriste = new Pozoriste(idpoz, nazivpoz, adresapoz, sajt, mesto_idm);
+
+			pozoristeDAO.save(pozoriste);
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	private void handleDelete() {
-		System.out.println("IDPOZ: ");
-		int id = Integer.parseInt(MainUIHandler.sc.nextLine());
-
 		try {
+			System.out.println("UNESITE IDPOZ: ");
+			int id = Integer.parseInt(MainUIHandler.sc.nextLine());
+
 			pozoristeDAO.deleteById(id);
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	
 	private void handleMultipleInserts() {
-		List<Pozoriste> pozoristeList = new ArrayList<>();
-		String answer;
+		String odgovor;
 		do {
-			System.out.println("IDPOZ: ");
-			int id = Integer.parseInt(MainUIHandler.sc.nextLine());
 
-			System.out.println("Naziv: ");
-			String naziv = MainUIHandler.sc.nextLine();
+			handleSingleInsert();
+			System.out.println("Kraj programa - X");
+			System.out.println("Nastavak programa - bilo koji karakter tastature");
+			odgovor = MainUIHandler.sc.nextLine();
 
-			System.out.println("Adresa: ");
-			String adresa = MainUIHandler.sc.nextLine();
-
-			System.out.println("Sajt: ");
-			String sajt = MainUIHandler.sc.nextLine();
-			
-			System.out.println("Mesto: ");
-			String mesto = MainUIHandler.sc.nextLine();
-
-			pozoristeList.add(new Pozoriste(id, naziv, adresa, sajt,mesto));
-
-			System.out.println("Prekinuti unos? X za potvrdu");
-			answer = MainUIHandler.sc.nextLine();
-		}while(!answer.equalsIgnoreCase("X"));
-
+		} while (!odgovor.equalsIgnoreCase("X"));
 	}
 
 }

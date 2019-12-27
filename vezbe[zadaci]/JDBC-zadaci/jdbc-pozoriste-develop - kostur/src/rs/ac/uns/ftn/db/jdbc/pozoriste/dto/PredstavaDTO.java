@@ -1,41 +1,49 @@
 package rs.ac.uns.ftn.db.jdbc.pozoriste.dto;
 
 public class PredstavaDTO {
-	int idpred;
-	String naziv_predstave;
-	double prosecan_broj_gledalaca;
+
+	int idp;
+	String nazivp;
+	float prosecan_broj_gledalaca;
 	
-	
-	
-	public PredstavaDTO(int idpred, String naziv_predstave, double prosecan_broj_gledalaca) {
+	public PredstavaDTO(int idp, String nazivp, float prosecan_broj_gledalaca) {
 		super();
-		this.idpred = idpred;
-		this.naziv_predstave = naziv_predstave;
+		this.idp = idp;
+		this.nazivp = nazivp;
 		this.prosecan_broj_gledalaca = prosecan_broj_gledalaca;
 	}
-	public int getIdpred() {
-		return idpred;
+
+	public int getIdp() {
+		return idp;
 	}
-	public void setIdpred(int idpred) {
-		this.idpred = idpred;
+
+	public void setIdp(int idp) {
+		this.idp = idp;
 	}
-	public String getNaziv_predstave() {
-		return naziv_predstave;
+
+	public String getNazivp() {
+		return nazivp;
 	}
-	public void setNaziv_predstave(String naziv_predstave) {
-		this.naziv_predstave = naziv_predstave;
+
+	public void setNazivp(String nazivp) {
+		this.nazivp = nazivp;
 	}
-	public double getProsecan_broj_gledalaca() {
+
+	public float getProsecan_broj_gledalaca() {
 		return prosecan_broj_gledalaca;
 	}
-	public void setProsecan_broj_gledalaca(double prosecan_broj_gledalaca) {
+
+	public void setProsecan_broj_gledalaca(float prosecan_broj_gledalaca) {
 		this.prosecan_broj_gledalaca = prosecan_broj_gledalaca;
 	}
-	
-	
+
 	@Override
 	public String toString() {
-		return String.format("%-6d %-10s %-8f ", idpred, naziv_predstave, prosecan_broj_gledalaca);
+		return "\t" + idp + "\t\t\t" + nazivp + "\t\t\t"
+				+ prosecan_broj_gledalaca ;
 	}
+	
+	
+	
 	
 }

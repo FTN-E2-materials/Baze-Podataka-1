@@ -5,10 +5,12 @@ import java.util.List;
 
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Uloga;
 
-public interface UlogaDAO extends CRUDDao<Uloga, Integer> { 
+public interface UlogaDAO extends CRUDDao<Uloga, Integer> {
 	
-	List<Uloga> pronadjiUlogePredstave(int idpred) throws SQLException;
+	public List<Uloga> nadjiUloge(Integer id) throws SQLException;
 	
-	Integer nadjiBrojUlogaPola(int idpred,String pol) throws SQLException;
+	//ocekuje id predstave za koju ce traziti broj uloga
+	public int nadjiBrojMuskihUloga(Integer id) throws SQLException;
 	
+	public int nadjiBrojZenskihUloga(Integer id) throws SQLException;
 }

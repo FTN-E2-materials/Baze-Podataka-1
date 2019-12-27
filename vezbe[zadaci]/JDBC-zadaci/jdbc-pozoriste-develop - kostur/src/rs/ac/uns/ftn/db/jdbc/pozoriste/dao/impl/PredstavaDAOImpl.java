@@ -10,7 +10,9 @@ import java.util.List;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.connection.HikariCP;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PredstavaDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dto.PredstavaDTO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Predstava;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Prikazivanje;
 
 public class PredstavaDAOImpl implements PredstavaDAO {
 
@@ -46,8 +48,20 @@ public class PredstavaDAOImpl implements PredstavaDAO {
 
 	@Override
 	public Iterable<Predstava> findAll() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Predstava> listaPredstava = new ArrayList<Predstava>();
+		String upit = "select idpred, nazivpred, trajanje, godinapre from predstava";
+		// int idpred, String nazivpred, String trajanje, int godinapre
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);
+				ResultSet resultSet = preparedStatement.executeQuery()) {
+			while (resultSet.next()) {
+				Predstava predstava = new Predstava(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+						resultSet.getInt(4));
+				listaPredstava.add(predstava);
+			}
+		}
+
+		return listaPredstava;
 	}
 
 	@Override
@@ -58,25 +72,8 @@ public class PredstavaDAOImpl implements PredstavaDAO {
 
 	@Override
 	public Predstava findById(Integer id) throws SQLException {
-		String query = "select idpred, nazivpred, trajanje,godinapre from predstava where idpred = ?";
-		Predstava predstava = null;
-
-		try (Connection connection = HikariCP.getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(query);) {
-
-			preparedStatement.setInt(1, id);
-
-			try (ResultSet resultSet = preparedStatement.executeQuery()) {
-				if (resultSet.isBeforeFirst()) {
-					resultSet.next();
-
-					predstava = new Predstava(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-							resultSet.getInt(4));
-				}
-			}
-		}
-
-		return predstava;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -92,29 +89,50 @@ public class PredstavaDAOImpl implements PredstavaDAO {
 	}
 
 	@Override
-	public List<PredstavaDTO> nadjiNajposecenijePredstave() throws SQLException {
-		List<PredstavaDTO> result = new ArrayList<PredstavaDTO>();
-		String upit = "SELECT idpred ,nazivpred, AVG(Pr.brojgled) FROM Predstava P, Prikazivanje Pr WHERE P.idpred = Pr.predstava_idpred GROUP BY P.idpred, nazivpred HAVING AVG(brojgled) >= ALL(SELECT AVG(brojgled)  FROM Predstava P, Prikazivanje Pr  WHERE P.idpred = Pr.predstava_idpred GROUP BY P.idpred)";
-		
+	public boolean imaPrikazivanje(Integer id) throws SQLException {
+		String upit = "select * from prikazivanje where predstava_idpred = ?";
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
+
+			preparedStatement.setInt(1, id);
+
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.isBeforeFirst()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+		}
+	}
+
+	@Override
+	public List<PredstavaDTO> nadjiSaNajvecim() throws SQLException {
+		List<PredstavaDTO> listaPredstava = new ArrayList<PredstavaDTO>();
+		String upit = "select predstava_idpred,nazivpred, round(avg(brojgled),2) as prosecan_broj_gledalaca from prikazivanje,predstava where prikazivanje.predstava_idpred = predstava.idpred group by predstava_idpred,nazivpred having round(avg(brojgled),2) >= all(select round(avg(brojgled),2) from prikazivanje group by predstava_idpred)";
 		try(Connection connection = HikariCP.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement(upit);
-			){
-			
-			try(ResultSet resultSet = preparedStatement.executeQuery()){
+			ResultSet resultSet = preparedStatement.executeQuery()){
+			if(resultSet.isBeforeFirst()) {
 				while(resultSet.next()) {
-					PredstavaDTO predstava = new PredstavaDTO(resultSet.getInt(1), resultSet.getString(2),
-							resultSet.getDouble(3));
-					result.add(predstava);
+					PredstavaDTO predstava = new PredstavaDTO(resultSet.getInt(1),resultSet.getString(2),resultSet.getFloat(3));
+					listaPredstava.add(predstava);
 				}
-				
 			}
 			
 		}
 		
-		
-		return result;
+		return listaPredstava;
 	}
 
+	
+	
+	
+	
+	
+	
 	
 	
 	

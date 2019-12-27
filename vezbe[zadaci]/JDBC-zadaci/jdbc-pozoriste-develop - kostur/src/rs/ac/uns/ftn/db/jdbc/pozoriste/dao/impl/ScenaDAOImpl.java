@@ -9,6 +9,7 @@ import java.util.List;
 
 import rs.ac.uns.ftn.db.jdbc.pozoriste.connection.HikariCP;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.ScenaDAO;
+import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Scena;
 
 public class ScenaDAOImpl implements ScenaDAO {
@@ -45,8 +46,18 @@ public class ScenaDAOImpl implements ScenaDAO {
 
 	@Override
 	public Iterable<Scena> findAll() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Scena> listaScena = new ArrayList<Scena>();
+		String upit = "select idsce, nazivsce, brojsed, pozoriste_idpoz from scena";
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);
+				ResultSet resultSet = preparedStatement.executeQuery()) {
+			while (resultSet.next()) {
+				Scena scena = new Scena(resultSet.getInt(1),resultSet.getString(2),resultSet.getInt(3),resultSet.getInt(4));
+				listaScena.add(scena);
+			}
+		}
+
+		return listaScena;
 	}
 
 	@Override
@@ -73,52 +84,4 @@ public class ScenaDAOImpl implements ScenaDAO {
 
 	}
 
-	
-	/**
-	 * Metoda koja nam vraca listu scena na osnovu prosledjenog ID-a pozorista
-	 * @throws SQLException 
-	 */
-	@Override
-	public List<Scena> nadjiScenuPozorista(Integer idPozorista) throws SQLException {
-		List<Scena> scenaList = new ArrayList<Scena>();
-		String upit = "select idsce,nazivsce,brojsed,pozoriste_idpoz from scena where pozoriste_idpoz = ?";
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(upit);
-			){
-			preparedStatement.setInt(1, idPozorista);
-			
-			try(ResultSet resultSet = preparedStatement.executeQuery()){
-				while(resultSet.next()) {
-					Scena scena = new Scena(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3),
-							resultSet.getInt(4));
-					scenaList.add(scena);
-				}
-				
-			}
-			
-		}
-		
-		return scenaList;
-	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

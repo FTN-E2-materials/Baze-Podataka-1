@@ -11,279 +11,194 @@ import rs.ac.uns.ftn.db.jdbc.pozoriste.connection.HikariCP;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.dao.PozoristeDAO;
 import rs.ac.uns.ftn.db.jdbc.pozoriste.model.Pozoriste;
 
-/**
- * Klasa koja implementira PozoristeDAO 
- * U njoj se sadrze sve osnovne funkcionalnosti za rad nad modelom Pozoriste
- * 
- * Na kolokvijumu se ocekuje da implementiramo sve ove metode
- */
-
 public class PozoristeDAOImpl implements PozoristeDAO {
-	
-	/**
-	 * Metoda koja prebrojava broj torki u tabeli/modelu Pozoriste
-	 */
+
 	@Override
 	public int count() throws SQLException {
-		String query = "select count(*) from pozoriste";
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			ResultSet resultSet = preparedStatement.executeQuery()	
-			){
-			
-			if(resultSet.next() ) {
+		String upit = "select count(*) from pozoriste";
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);
+				ResultSet resultSet = preparedStatement.executeQuery()) {
+			if (resultSet.isBeforeFirst()) {
+				resultSet.next();
 				return resultSet.getInt(1);
-			}else {
+			} else {
 				return -1;
 			}
-			
 		}
-		
+
 	}
 
-	/**
-	 * Metoda koja sluzi za brisanje prosledjenog entiteta
-	 */
 	@Override
 	public void delete(Pozoriste entity) throws SQLException {
-		String query = "delete from pozoriste where idpoz = ?";
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-		    ){
+		String upit = "delete from pozoriste where idpoz = ?";
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
 			preparedStatement.setInt(1, entity.getId());
 			preparedStatement.executeUpdate();
 		}
-		
-		
+
 	}
-	
-	/**
-	 * Metoda koja sluzi za brisanje svih entiteta iz tabele Pozoriste
-	 */
+
 	@Override
 	public void deleteAll() throws SQLException {
-		String query = "delete from pozoriste";
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			){
+		String upit = "delete from pozoriste";
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
 			preparedStatement.executeUpdate();
 		}
-		
+
 	}
 
-	/**
-	 * Metoda koja brise po prosledjenom id-u 
-	 */
 	@Override
 	public void deleteById(Integer id) throws SQLException {
-		String query = "delete from pozoriste where idpoz = ?";
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			){
-			preparedStatement.setInt(1,id);
+		String upit = "delete from pozoriste where idpoz = ?";
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
+			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
 		}
+
 	}
 
-	/**
-	 * Metoda koja proverava da li postoji entitet sa prosledjenim id-om
-	 */
 	@Override
 	public boolean existsById(Integer id) throws SQLException {
 		String upit = "select * from pozoriste where idpoz = ?";
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(upit);
-			){
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
 			preparedStatement.setInt(1, id);
-			try(ResultSet resultSet = preparedStatement.executeQuery()){
-				return resultSet.isBeforeFirst();
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.isBeforeFirst()) {
+					return true;
+				} else {
+					return false;
+				}
 			}
-			
 		}
 	}
 
-	/**
-	 * Metoda koja pronalazi sva pozorista i vraca ih preko liste pozorista
-	 */
 	@Override
 	public Iterable<Pozoriste> findAll() throws SQLException {
+		List<Pozoriste> listaPozorista = new ArrayList<Pozoriste>();
 		String upit = "select idpoz, nazivpoz, adresapoz, sajt, mesto_idm from pozoriste";
-		List<Pozoriste> pozoristeList = new ArrayList<Pozoriste>();
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(upit);
-			ResultSet resultSet = preparedStatement.executeQuery()
-			){
-			
-			while(resultSet.next() ) {
-				Pozoriste pozoriste = new Pozoriste(resultSet.getInt(1),
-						resultSet.getString(2),resultSet.getString(3),resultSet.getString(4),
-						resultSet.getString(5));
-				pozoristeList.add(pozoriste);
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);
+				ResultSet resultSet = preparedStatement.executeQuery()) {
+			while (resultSet.next()) {
+				Pozoriste pozoriste = new Pozoriste(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+						resultSet.getString(4), resultSet.getString(5));
+				listaPozorista.add(pozoriste);
 			}
-			
 		}
-		
-		return pozoristeList;
-		
+
+		return listaPozorista;
 	}
 
-	/**
-	 * Metoda koja pronalazi pozorista odredjenih ID-eva
-	 */
 	@Override
 	public Iterable<Pozoriste> findAllById(Iterable<Integer> ids) throws SQLException {
-		List<Pozoriste> pozoristeList = new ArrayList<>();
-		
-		StringBuilder stringBuilder = new StringBuilder();
-		String pocetakUpita = "select idpoz, nazivpoz,adresapoz,sajt,mesto_idm from pozoriste where idpoz in(";
-		stringBuilder.append(pocetakUpita);
-		
-		// koliko imam ID-eva toliko stavim upitnika u moj upit
-		for(@SuppressWarnings("unused") Integer id: ids) {					// posto id ne koristim nego mi samo sluzi za
-			stringBuilder.append("?,");										// prolazak kroz svaki id, stavim da je unused
-		}																	// da eclipse ne izbacuje bezveze warning
-		
-		stringBuilder.deleteCharAt(stringBuilder.length()-1);				// kako bih obrisao poslednji zarez
-		stringBuilder.append(")");											// zatvorim zagradu u upitu
-		
-		String query = stringBuilder.toString();							// prebacim ga u String jer je bio prethodno StringBuilder tipa
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			){
-			
-			int i=0;
-			for(Integer id : ids) {											// prolazim kroz svaki upitnik i zamenjujem ga 
-				preparedStatement.setInt(++i, id);							// sa trenutnim id-em
-			}
-			
-			try(ResultSet resultSet = preparedStatement.executeQuery(query)){
-				if(resultSet.isBeforeFirst() ) {							// ako je pre pocetka,tj ako postoji
-					resultSet.next(); 										// prebacim se na resenje
-					
-					pozoristeList.add(new Pozoriste(resultSet.getInt(1),resultSet.getString(2), resultSet.getString(3),
-							resultSet.getString(4), resultSet.getString(5)) );
-				}
-				
-			}
-			
+		List<Pozoriste> listaPozorista = new ArrayList<Pozoriste>();
+		String upit0 = "select idpoz, nazivpoz, adresapoz, sajt, mesto_idm from pozoriste where idpoz in(";
+
+		for (@SuppressWarnings("unused")
+		Integer id : ids) {
+			upit0 += "?,";
 		}
-		
-		
-		return pozoristeList;
+		String upit = upit0.substring(0, upit0.length() - 1);
+		upit += ")";
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
+			int i = 0;
+			for (Integer id : ids) {
+				preparedStatement.setInt(++i, id);
+			}
+
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				while (resultSet.next()) {
+					Pozoriste pozoriste = new Pozoriste(resultSet.getInt(1), resultSet.getString(2),
+							resultSet.getString(3), resultSet.getString(4), resultSet.getString(5));
+					listaPozorista.add(pozoriste);
+				}
+			}
+		}
+
+		return listaPozorista;
 	}
 
-	/**
-	 * Metoda koja pronalazi pozoriste sa odredjenim ID-em
-	 */
 	@Override
 	public Pozoriste findById(Integer id) throws SQLException {
-		String query = "select idpoz, nazivpoz, adresapoz, sajt, mesto_idm from pozoriste where idpoz = ?";
+		String upit = "select idpoz, nazivpoz, adresapoz, sajt, mesto_idm from pozoriste where idpoz = ?";
 		Pozoriste pozoriste = null;
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-			){
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(upit);) {
 			preparedStatement.setInt(1, id);
-			try(ResultSet resultSet = preparedStatement.executeQuery()){
-				if(resultSet.isBeforeFirst() ) {
+			try (ResultSet resultSet = preparedStatement.executeQuery()) {
+				if (resultSet.isBeforeFirst()) {
 					resultSet.next();
 					pozoriste = new Pozoriste(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
 							resultSet.getString(4), resultSet.getString(5));
 				}
 			}
 		}
-		
-		
 		return pozoriste;
 	}
 
-	/**
-	 * Metoda koja ubacuje entitet u tabelu ili ga menja ako vec postoji
-	 */
 	@Override
 	public void save(Pozoriste entity) throws SQLException {
-		String insertCommand = "insert into pozoriste (nazivpoz, adresapoz, sajt, mesto_idm, idpoz) values (?, ?, ?, ?, ?)";
-		String updateCommand = "update pozoriste set nazivpoz=?, adresa=?, sajt=?, mesto_idm=? where idpoz=?";
-				
-		int i = 0;							// inkrementer za postavljanje vrednosti umesto upitnika
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatement = connection.prepareStatement(existsById( entity.getId()) ? updateCommand : insertCommand)
-			){
-			
+		String insertuj = "insert into pozoriste (nazivpoz, adresapoz, sajt, mesto_idm, idpoz)  values (?,?,?,?,?)";
+		String apdejtuj = "update pozoriste set nazivpoz = ?, adresapoz = ?, sajt = ?, mesto_idm = ? where idpoz = ?";
+		// idpoz, nazivpoz, adresapoz, sajt, mesto_idm
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatement = connection
+						.prepareStatement(existsById(entity.getId()) ? apdejtuj : insertuj);) {
+			int i = 0;
 			preparedStatement.setString(++i, entity.getNaziv());
 			preparedStatement.setString(++i, entity.getAdresa());
 			preparedStatement.setString(++i, entity.getSajt());
 			preparedStatement.setString(++i, entity.getMesto());
 			preparedStatement.setInt(++i, entity.getId());
-			
+
 			preparedStatement.executeUpdate();
 		}
-		
-		
-				
+
 	}
 
-	/**
-	 * Metoda koja ubacuje prosledjene entitete ili ih menja ako vec postoje
-	 */
 	@Override
 	public void saveAll(Iterable<Pozoriste> entities) throws SQLException {
-		String insertCommand = "insert into pozoriste (nazivpoz,adresapoz,sajt,mesto_idm,idpoz) values (?, ?, ?, ?, ?)";
-		String updateCommand = "update pozoriste set nazivpoz = ?, adresa=?, sajt=?, mesto_idm=? where ipoz=?";
-		
-		try(Connection connection = HikariCP.getConnection();
-			PreparedStatement preparedStatementUpdate = connection.prepareStatement(updateCommand);
-			PreparedStatement preparedStatementInsert = connection.prepareStatement(insertCommand);
-			){
-			
-			connection.setAutoCommit(false);						// iskljucujem autoCommit posto imamo vise entiteta pa ne zelimo
-																	// da nam se desi da na pola transakcije dodje do prekida npr:
-			// odlucimo da deo viska novca u kasi firme damo svakom radniku kao 13 tu platu, pa krenemo da delimo i uspemo da podelimo 
-			// na samo 37% radnika.
-			// U tom trenutku nestaje nam novca sto znaci da ne bi trebali da bilo kome damo 13 tu platu ili bi trebali da je smanjimo
-			// - autoCommit bi posle svakog davanja 13 plate radniku(entitetu) odma isplatio to na racun( izvrio i updatovo )
-			// i posle onda ne mozemo da mu skinemo sa racuna, zbog toga iskljucimo autoCommit koji nam da mogucnost da tek kada
-			// zavrsimo sa svima, onda svima podelimo pare(commitujemo).
-			
-			for(Pozoriste entity : entities) {
-				int i = 0;
-				PreparedStatement preparedStatement;
-				if(existsById(entity.getId())) {
+		String insertuj = "insert into pozoriste (nazivpoz, adresapoz, sajt, mesto_idm, idpoz)  values (?,?,?,?,?)";
+		String apdejtuj = "update pozoriste set nazivpoz = ?, adresapoz = ?, sajt = ?, mesto_idm = ? where idpoz = ?";
+		// idpoz, nazivpoz, adresapoz, sajt, mesto_idm
+
+		try (Connection connection = HikariCP.getConnection();
+				PreparedStatement preparedStatementInsert = connection.prepareStatement(insertuj);
+				PreparedStatement preparedStatementUpdate = connection.prepareStatement(apdejtuj);) {
+
+			connection.setAutoCommit(false);
+			PreparedStatement preparedStatement;
+			for (Pozoriste pozoriste : entities) {
+				if (existsById(pozoriste.getId())) {
 					preparedStatement = preparedStatementUpdate;
 				} else {
 					preparedStatement = preparedStatementInsert;
 				}
-				
-				preparedStatement.setString(++i, entity.getNaziv());
-				preparedStatement.setString(++i, entity.getAdresa());
-				preparedStatement.setString(++i, entity.getSajt());
-				preparedStatement.setString(++i, entity.getMesto());
-				preparedStatement.setInt(++i, entity.getId());
-				
-				preparedStatement.execute();
-				
+				int i = 0;
+				preparedStatement.setString(++i, pozoriste.getNaziv());
+				preparedStatement.setString(++i, pozoriste.getAdresa());
+				preparedStatement.setString(++i, pozoriste.getSajt());
+				preparedStatement.setString(++i, pozoriste.getMesto());
+				preparedStatement.setInt(++i, pozoriste.getId());
+
+				preparedStatement.executeUpdate();
 			}
- 			
+
 			connection.commit();
 		}
-		
+
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
