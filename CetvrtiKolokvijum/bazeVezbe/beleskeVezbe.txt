@@ -1,0 +1,212 @@
+--------------------------------- BAZA PODATAKA 1 --------------------------------
+---------------------------------     BELESKE    --------------------------------- 
+
+Za prva tri koda je zaduzen Aleksandar Jeremic. A za poslednji
+odnosno za rasute datoteke je zaduzen Vladimir Ivkovic.
+
+Knjiga koja sadrzi pseudokodove koje su implementirali gore navedene
+kolege je knjiga Pavleta Mogina "STRUKTURE PODATAKA I ORGANIZACIJA DATOTEKA"
+
+
+----------------------------------------------------------------------------------
+------------------------------------ KOLOKVIJUM ----------------------------------
+Na kolokvijum dolazi:
+Kao laksi zadatak [10 bodova]: serijska i sekvencijalna datotetka.
+Npr:
+	a) try sa serijskom
+	b) onda nesto sa sekvencijalnom 
+SIGURNO: kombinacija obe, tj. zahteva se vesto rukovanje s obe.
+
+Kao tezi zadatak: staticka rasuta datoteka[20 bodova]
+	* pri cemu koristimo metodu transformacije:
+		~METODA OSTATKA PRI DELJENJU koja moze da se razlikuje:
+			- linearno trazenje prekoracilaca, konstantan korak k
+			- linearno trazenje prekoracilaca, promenljiv korak k
+Npr:
+a) od serijske rasutu napraviti
+b) nesto s njom odraditi, pa napraviti sekvencijalnu
+c) i onda mozda opet u rasutu.
+SIGURNO: kombinacija svih, tj. zahteva se vesto rukovanje s sve tri vrste dat.
+----------------------------------------------------------------------------------
+------------------------------------- BELESKE ------------------------------------
+
+Npr:
+Dobijemo ulaznu datoteku, u kosturu nista, sem kako izgleda slog, onda uradimo
+neku operaciju: fizicko brisanje, logicko,pretraga itd. i onda pod
+b)c)d) radim nad tim podacima,i na kraju kreiram sekvencijalnu.
+
+Dobicemo binarnu i tekstualnu datoteku, binarna je ne citljiva, jedini nacin je 
+da napravimo program koji to iscitava, ali srz je u tome sto radimo nad binarnom, 
+ali tekstualna je tu da bi videli kako trebaju zapravi izgledati podaci.
+
+Funkcija koja sluzi za iscitavanje podataka iz binarnog fajla: fread(...)
+
+----------------------------------------------------------------------------------
+----------------------------- Zahtevanje znanja iz C-a ---------------------------
+Nizovi su jako bitni za ovaj kolokvijum i 70% kolokvijuma se oslanja na znanje
+nizova i rukovanje s istim. 
+
+Biblioteka i cije funkcije bi trebali da pregledamo i upoznamo se s njima je:
+stdio.h
+
+Znamo da je binarna datoteka nista vise do niza bajtova, a da sa sizeof(par.) 
+dobijamo broj bajtova prosledjenog parametra.
+
+Funkcija koja nam daje pozicioniranje kroz binarni fajl na osnovu pokazivaca je 
+funkcija fseek(...):
+	* fseek(fajl,broj_bajtova,odakle_krecemo)
+		~ odakle_krecemo moze biti:
+			- SEEK_SET [ pocetak fajla ]
+			- SEEK_CUR [ trenutna pozicija fajl pokazivaca ]
+			- SEEK_END [ kraj fajla ] 
+
+Ako smo upoznati sa funkcijom sizeof(), znamo da sa sizeof(slog) dobijamo podatak
+koliko bajtova ima nasa struktura slog.
+
+Pri radu sa datotekom prvo treba da kreiramo/otvorimo fajl, funkcija koja nam
+to omogucava je fopen(...):
+	* fopen(sta_otvara,rezim[rb-binarna]) 
+		~ rezim moze biti[ neki osnovni rezimi ]:
+			- r  [ otvaranje POSTOJECEG fajla za citanje]
+			- w  [ kreira prazan fajl za pisanje ]
+			- r+ [ otvaranje POSTOJECEG fajla za citanje i pisanje]
+			- w+ [ kreira prazan fajl za citanje i pisanje] 
+			- b  [ binarni fajl]
+		
+I na kraju zatvaramo datoteku sa funkcijom fclose(...).
+
+Funkcije koje su bitne za rad sa binarnim fajlom:
+	* fread(...):
+		~ citanje iz fajla u neku promenljivu u kodu
+	* fwrite(...): 
+		~ pisanje u fajl iz neke promenljive.
+	* fseek(...)
+
+Funkcija za upis u fajl je fwrite(...):
+	* fwrite(iz_cega_upisujem,velicina_elementa,broj_elemenata,odredisni_fajl)
+----------------------------------------------------------------------------------
+-------------------------------- Serijska datoteka ------------------------------- 
+SLOG:
+	1.primarni kljuc- glavno obelezje za sve sto radimo, njega ne 
+		menjamo,sluzi za identifikaciju sloga
+	2.ostala obelezja
+	3.fleg za logicko brisanje:
+		0- nije obrisan ( npr, mada ide po nasem dogovoru obicno)
+		1- obrisan
+Serijska datoteka moze da bude BLOKIRANA i NEBLOKIRANA
+
+BLOKIRANA: slogovi se smestaju u blokove po FAKTORU BLOKIRANJA,npr f=3, to znaci
+da u svaki blok mogu da smestim 3 sloga.
+Treba voditi racuna da nikada ne pristupamo fajlu po slogu nego samo preko bloka.
+Pristup fajlu je na nivou BLOKA, ne na nivou SLOGA !
+
+NEBLOKIRANA: Redjamo slogove, tj. kod nje vazi da je BLOK == SLOG to znaci da 
+je f = 1.
+
+Serijska datoteka ima jedan slog koji ima vrednost kljuca "*" npr. i taj slog
+ce u nasoj datoteci predstavljati poslednje popunjeno mesto u datoteci, tj kraj
+datoteke, a to nam je potrebno zato sto u serijskoj datoteci vrsimo dodavanje na
+kraj uvek.
+
+
+BLOK je struktura koja sadrzi niz slogova duzine f, a organizovali smo je u 
+strukturu(u C-u) kako bi lakse mogli rukovati s BLOKom.
+
+Kod serijske datoteke pri kreiranju fajla moramo prvo napraviti jedan blok i 
+staviti jedan slog koji ce nam predstavljati kraj datoteke.
+----------------------------------------------------------------------------------
+------------------------------- ALGORITAM KOD SERIJSKE ---------------------------
+UNOS:
+	* da bi uneli ne sme da postoji, jer ne sme da se ponovi PRIMARNI KLJUC
+	* unos je na kraj datoteke
+
+BRISANJE:
+	* da bi obrisali mora da postoji
+	** LOGICKO BRISANJE **
+		-promena flega
+
+	** FIZICKO BRISANJE **
+		- mora da postoji
+		- pri pomeranju pomerati i logicki obrisane
+PRETRAGA:
+
+IZMENA:
+	* da bi izmenili mora da postoji
+
+
+Voditi racuna da se slogovoi smestaju u datoteku i da za to postoje algoritmi.
+Na kolokvijumu se zahtevaju implementacije pseudo kodova iz knjige Pavleta Mogina,
+ako nesto u ovom fajlu, posavetovati se sa navedenom knjigom.
+
+Takodje cesto na usmenom zna da bude pitanje: da li postoji fizicka i logicka 
+povezanost:
+	* serijska: ne
+	* sekvencijalna: da
+	* rasuta: da
+----------------------------------------------------------------------------------
+----------------------------------- POTREBNO/DATO --------------------------------
+
+Na kolokvijumu npr. bude dato:
+	* struct Blog
+A dosta toga mora da se implementira, npr:
+	* struct Blok
+	* dataTime npr
+	* meni takodje sami pravimo sa onim switchem
+	* ostale funkcionalnosti
+----------------------------------------------------------------------------------
+----------------------------- Sekvencijalna datoteka -----------------------------
+
+Je nista vise do sortirane serijske datoteke sa sitnim izmenama kod algoritama.
+
+UNOS je malo kompleksniji jer dodajemo tamo gde on treba da bude smesten da bi 
+bilo sortirano.
+	1. stigao sam do kraja -> taj slog je najveci
+	2. stigao sam do logicki obrisanog sa istim kljucem na tu...
+	3. trazim prvi veci od mene -> pomeranje u desno (pomeraju se i logicki
+		obrisani)
+PRETRAGA je ista kao kod serijske samo nema potrebe da poredim kada stignem do
+prvog veceg ( manji broj pristupa od serijske)
+
+----------------------------------------------------------------------------------
+--------------------------------- Rasuta datoteka --------------------------------
+
+Kod rasute datoteke postoji razlika u metodama transformacija:
+	* metoda ostatka pri deljenju je ona koju cemo mi raditi
+
+Takodje postoje i slogovi prekoracioci i onda tu postoje razliciti algoritmi:
+	* linearno trazenje prekoracilaca, konstantan korak k
+	* linearno trazenje prekoracilaca, promenljiv korak k
+
+
+Na pocetku moramo da znamo koliko imamo BACKETA == BLOKOVA, broj baketa je
+ B=broj_baketa.Faktor blokiranja je sada FAKTOR BAKETIRANJA npr. b=f=3 znaci
+da imamo 3 sloga u baketu(bloku).
+
+Takodje je potrebno znaci na osnovu formula naci npr. B ili b, potrebno bi
+npr. bilo naci iz faktora popunjenosti q broj baketa B i slicno na kolokvijumu.
+
+Npr:
+	- faktor popunjenosti je npr 75% q=75%
+	- q= N/Q N-broj slogova npr 15 Q=N/q = 15/(3/4) = 20 -> B = Q/b = 7
+	- nesto ce tu biti dato, i mi moramo B i b odrediti
+
+
+Na pocetku status svih blokova je EMPTY a bakter je ACTIV samo kad se unese slog
+a ima status DELETED kad se logicki obrise.
+
+
+----------------------------------------------------------------------------------
+--------------------------- TRANSFORMACIJA KLJUCA U ADRESU -----------------------
+
+Metoda ostatka pri deljenju: id%B , rezultat toga je adresa(broj baketa) na koju
+cu smestiti taj slog.
+
+Kad slog moze da stane u svoj maticni baket to je primarni slog,onaj slog koji ne
+moze da stane u svoj maticni baket je PREKORACILAC.
+
+Maticni baket je onaj baket koji slog treba da dobije po transformaciji
+Za prekoracioca se trazi baket po formuli: 
+	** (trenutni_baket+korak)%B **
+
+AKCENAT JE NA ONOME STO SMO RADILI NA VEZBAMA I TAKO CE SLICNO DOCI !!!!
+----------------------------------------------------------------------------------

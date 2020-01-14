@@ -15,7 +15,8 @@ public class HikariCP {
 		hikariConfig.setJdbcUrl(ConnectionParams.LOCAL_CONNECTION_STRING);
 		hikariConfig.setUsername(ConnectionParams.USERNAME);
 		hikariConfig.setPassword(ConnectionParams.PASSWORD);
-	
+		
+		
 		hikariConfig.setMaximumPoolSize(5);
 		hikariConfig.addDataSourceProperty("checkPrepStmts", "true");
 		hikariConfig.addDataSourceProperty("prepStmtCheckSize", "250");
@@ -28,6 +29,4 @@ public class HikariCP {
 	public static Connection getConnection() throws SQLException {
 		return hikariDS.getConnection();
 	}
-	
-	
 }
