@@ -1,7 +1,0 @@
-*.layout
-*.depend
-bin/
-obj/
-data/*
-*.exe
-*.out

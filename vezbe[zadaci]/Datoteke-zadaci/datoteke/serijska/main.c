@@ -5,7 +5,6 @@
 
 // gcc *.c && ./a.out
 
-
 int main() {
 
 	int running = 1;
