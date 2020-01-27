@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1580150679 source:c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasutavezba\rasutavezba\main.c
+	<stdio.h>
+	<stdlib.h>
+	"metode.h"
+
+1580150599 c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasutavezba\rasutavezba\metode.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	"strukture.h"
+
+1580161775 c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasutavezba\rasutavezba\strukture.h
+
+1580169177 source:c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasutavezba\rasutavezba\metode.c
+	"metode.h"
+
+1580150679 source:c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasuta[moja-implementacija]\rasutavezba\main.c
+	<stdio.h>
+	<stdlib.h>
+	"metode.h"
+
+1580150599 c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasuta[moja-implementacija]\rasutavezba\metode.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<sys/types.h>
+	"strukture.h"
+
+1580169413 c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasuta[moja-implementacija]\rasutavezba\strukture.h
+
+1580169177 source:c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasuta[moja-implementacija]\rasutavezba\metode.c
+	"metode.h"
+
