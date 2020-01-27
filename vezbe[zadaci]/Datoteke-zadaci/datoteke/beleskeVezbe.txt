@@ -208,5 +208,4 @@ Maticni baket je onaj baket koji slog treba da dobije po transformaciji
 Za prekoracioca se trazi baket po formuli: 
 	** (trenutni_baket+korak)%B **
 
-AKCENAT JE NA ONOME STO SMO RADILI NA VEZBAMA I TAKO CE SLICNO DOCI !!!!
 ----------------------------------------------------------------------------------
