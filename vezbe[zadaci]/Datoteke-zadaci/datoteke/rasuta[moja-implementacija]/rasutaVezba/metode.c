@@ -10,6 +10,11 @@ FILE *otvoriDatoteku(char *imefajla) {
 	return fajl;
 }
 
+/**
+    Metoda koja za prosledjeni naziv fajla
+    kreira rasutu datoteku sa 'B' baketa
+    i faktorom baketiranja 'b'.
+*/
 void kreirajRasutuDatoteku(char *imefajla){
     FILE *fajl = fopen(imefajla, "wb");
 	if (fajl == NULL) {
@@ -20,7 +25,6 @@ void kreirajRasutuDatoteku(char *imefajla){
         for(int i = 0; i < B; i++){                 // pravimo B(7 npr) baketa
             fwrite(&baketi[i],sizeof(BAKET),1,fajl);
         }
-
         fseek(fajl,0,SEEK_SET);
         for(int i = 0; i<B;i++){
             fread(&baketi[i],sizeof(BAKET),1,fajl);
@@ -37,16 +41,15 @@ void kreirajRasutuDatoteku(char *imefajla){
             fwrite(&baketi[i],sizeof(BAKET),1,fajl);
 
         }
-
-
-
-
 		printf("Datoteka \"%s\" uspesno kreirana.\n", imefajla);
 		fclose(fajl);
 	}
 
 }
 
+/**
+    Metoda koja vrsi ispis rasute datoteke.
+*/
 void ispisRasute(FILE *fajl){
     if (fajl == NULL) {
 		printf("Datoteka nije otvorena!\n");
@@ -60,11 +63,11 @@ void ispisRasute(FILE *fajl){
     for(int i = 0; i < B; i++){
         fread(&baketi[i],sizeof(BAKET),1,fajl);
         for(int j = 0; j < b; j++){
-            printf("%d %d\t",i,j);
+            printf("%d %d\t",i,j);                  // ispis indeksa bloka i sloga
             printf("%s\t %s\t %s\t %s\t %d\t %d\t\n",baketi[i].slogovi[j].evidBroj,baketi[i].slogovi[j].sifraZatvorenika,baketi[i].slogovi[j].datumDolaska,baketi[i].slogovi[j].oznakaCelije,baketi[i].slogovi[j].duzinaKazne,baketi[i].slogovi[j].deleted);
 
         }
-        //printf("\n\n");
+        printf("\n");
     }
 
 }

@@ -16,10 +16,6 @@ int main()
 		printf("2 - Kreiraj rasutu\n");
 		printf("3 - Ispisi rasutu\n");
 		printf("4 - Konvertuj iz serijske u rasutu\n");
-		printf("5 - \n");
-		printf("6 - \n");
-		printf("7 - \n");
-		printf("8 - \n");
 		printf("0 - Izlaz\n");
 		if (fajlRasuta == NULL) {
 			printf("!!! PAZNJA: RASUTA datoteka jos uvek nije otvorena !!!\n");
@@ -34,12 +30,12 @@ int main()
 				{
                     char filename[20];
 					printf("Unesite ime RASUTE datoteke za otvaranje: ");
-					scanf("%s", &filename[0]);
+					scanf("%s", filename);
 					fajlRasuta = otvoriDatoteku(filename);
 
                     char filename1[20];
 					printf("Unesite ime SERIJSKE datoteke za otvaranje: ");
-					scanf("%s", &filename1[0]);
+					scanf("%s", filename1);
 					fajlSerijska = otvoriDatoteku(filename1);
 
 					printf("\n");
@@ -64,30 +60,6 @@ int main()
 			case 4:
 				{
                     prebaciSerijskaRasuta(fajlSerijska,fajlRasuta);
-					printf("\n");
-					break;
-				}
-			case 5:
-				{
-
-					printf("\n");
-					break;
-				}
-			case 6:
-				{
-
-					printf("\n");
-					break;
-				}
-			case 7:
-				{
-
-					printf("\n");
-					break;
-				}
-			case 8:
-				{
-
 					printf("\n");
 					break;
 				}
