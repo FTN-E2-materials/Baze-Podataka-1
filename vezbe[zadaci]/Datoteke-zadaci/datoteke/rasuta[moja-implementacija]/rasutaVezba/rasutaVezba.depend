@@ -35,3 +35,19 @@
 1580217836 source:c:\users\vaxi\desktop\desktop\faks\3 godina\5-semestar\baze podataka\vezbe\vezbe[zadaci]\datoteke-zadaci\datoteke\rasuta[moja-implementacija]\rasutavezba\metode.c
 	"metode.h"
 
+1580226793 source:/home/vaksi/Desktop/ancaVezba/bazePodataka/vezbe[zadaci]/Datoteke-zadaci/datoteke/rasuta[moja-implementacija]/rasutaVezba/main.c
+	<stdio.h>
+	<stdlib.h>
+	"metode.h"
+
+1580226973 /home/vaksi/Desktop/ancaVezba/bazePodataka/vezbe[zadaci]/Datoteke-zadaci/datoteke/rasuta[moja-implementacija]/rasutaVezba/metode.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"strukture.h"
+
+1580223631 /home/vaksi/Desktop/ancaVezba/bazePodataka/vezbe[zadaci]/Datoteke-zadaci/datoteke/rasuta[moja-implementacija]/rasutaVezba/strukture.h
+
+1580227605 source:/home/vaksi/Desktop/ancaVezba/bazePodataka/vezbe[zadaci]/Datoteke-zadaci/datoteke/rasuta[moja-implementacija]/rasutaVezba/metode.c
+	"metode.h"
+

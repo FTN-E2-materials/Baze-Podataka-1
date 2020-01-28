@@ -1,5 +1,6 @@
 #include "metode.h"
 
+
 FILE *otvoriDatoteku(char *imefajla) {
 	FILE *fajl = fopen(imefajla, "rb+");
 	if (fajl == NULL) {
@@ -21,26 +22,21 @@ void kreirajRasutuDatoteku(char *imefajla){
 		printf("Doslo je do greske prilikom kreiranja datoteke \"%s\"!\n", imefajla);
 	} else {
 		//Kreiramo inicijalne bakete postavljene na pocetne vrednosti status flega.
-        BAKET baketi[B];
+
+		BAKET baket;
+		fseek(fajl,0,SEEK_SET);
+		for(int j = 0; j < b; j++){
+            baket.slogovi[j].duzinaKazne = 0;
+            baket.slogovi[j].deleted = 0;
+            strcpy(baket.slogovi[j].evidBroj,"-");
+            strcpy(baket.slogovi[j].sifraZatvorenika,"-");
+            strcpy(baket.slogovi[j].datumDolaska,"-");
+            strcpy(baket.slogovi[j].oznakaCelije,"-");
+        }
         for(int i = 0; i < B; i++){                 // pravimo B(7 npr) baketa
-            fwrite(&baketi[i],sizeof(BAKET),1,fajl);
+            fwrite(&baket,sizeof(BAKET),1,fajl);
         }
-        fseek(fajl,0,SEEK_SET);
-        for(int i = 0; i<B;i++){
-            fread(&baketi[i],sizeof(BAKET),1,fajl);
-            for(int j = 0; j < b; j++){
-                baketi[i].slogovi[j].duzinaKazne = 0;
-                baketi[i].slogovi[j].deleted = 0;
-                strcpy(baketi[i].slogovi[j].evidBroj,"-");
-                strcpy(baketi[i].slogovi[j].sifraZatvorenika,"-");
-                strcpy(baketi[i].slogovi[j].datumDolaska,"-");
-                strcpy(baketi[i].slogovi[j].oznakaCelije,"-");
 
-            }
-            fseek(fajl,-sizeof(BAKET),SEEK_CUR);
-            fwrite(&baketi[i],sizeof(BAKET),1,fajl);
-
-        }
 		printf("Datoteka \"%s\" uspesno kreirana.\n", imefajla);
 		fclose(fajl);
 	}

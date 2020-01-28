@@ -6,12 +6,13 @@
 
 
 
+
 /* Svaki slog predstavlja jedan dolazak. */
 typedef struct Slog {
-	char evidBroj[8+1];     //koristi se kao kljuc sloga
-	char sifraZatvorenika[7+1];
+	char evidBroj[9];     //koristi se kao kljuc sloga
+	char sifraZatvorenika[8];
 	char datumDolaska[20];
-	char oznakaCelije[5+1];
+	char oznakaCelije[6];
 	int duzinaKazne;
 	int deleted;            // 0 - EMPTY, 1 - ACTIV, 2 - DELETED kod RASUTE
 } SLOG;

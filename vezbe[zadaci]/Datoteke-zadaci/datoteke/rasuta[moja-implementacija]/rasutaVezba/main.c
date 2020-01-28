@@ -3,6 +3,7 @@
 
 #include "metode.h"
 
+
 int main()
 {
     int running = 1;
@@ -66,10 +67,9 @@ int main()
 			case 0:
 				{
 					running = 0;
-					if ( fajlRasuta != NULL || fajlSerijska != NULL ) {
-						fclose(fajlRasuta);
-						fclose(fajlSerijska);
-					}
+                    fclose(fajlRasuta);
+                    fclose(fajlSerijska);
+
 				}
 		}
 	}
