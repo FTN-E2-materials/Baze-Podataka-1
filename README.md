@@ -1,7 +1,7 @@
 # Zadaci - Baze Podataka 1 [Fakultet tehnickih nauka]
 
 <p align="center">
-  <img width="650" height="270" src="http://www.cybertrol.com/wp-content/uploads/2016/03/DatabaseDesign_Infographic-1.png">
+  <img width="650" height="270" src="https://wpdatatables.com/wp-content/uploads/2018/10/20605.jpg">
 </p>
 
 ##### Vezbe 1 - [SQL] - Uvod 
