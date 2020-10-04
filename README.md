@@ -1,17 +1,25 @@
-# Zadaci - Baze Podataka 1 [Fakultet tehnickih nauka]
+# Baze Podataka 1 - Materijali
 
 <p align="center">
   <img width="650" height="270" src="https://wpdatatables.com/wp-content/uploads/2018/10/20605.jpg">
 </p>
 
-##### Vezbe 1 - [SQL] - Uvod 
-##### Vezbe 2 - [SQL] - Agregacione funkcije,group by,ugnjezdeni upiti(zavisni i nezavisni),spajanje tabela
-##### Vezbe 3 - [SQL] - Upiti sa visestrukom upotrebom iste tabele, spajanje tabela(preko join-a)
-##### Vezbe 4 - [SQL] - Kreiranje,menjanje,brisanje sadrzaja/tabele , pogledi, with
-##### Vezbe 5 - [ER Model] - Uvodni zadaci
-##### Vezbe 6 - [ER Model] - Zadaci
-##### Vezba 8 - [JDBC] - Konekcija baze podataka preko Jave
-##### Vezba 9 - [Datoteke] - Organizacija podataka
-<hr>
 
-###### Zbirka zadaci - velika vecina zadataka iz zbirke
+## Sadrzaj
+* Vezbe (slajdovi + zadaci)
+  * Vezbe 1 - [SQL] - Uvod 
+  * Vezbe 2 - [SQL] - Agregacione funkcije,group by,ugnjezdeni upiti(zavisni i nezavisni),spajanje tabela
+  * Vezbe 3 - [SQL] - Upiti sa visestrukom upotrebom iste tabele, spajanje tabela(preko join-a)
+  * Vezbe 4 - [SQL] - Kreiranje,menjanje,brisanje sadrzaja/tabele , pogledi, with
+  * Vezbe 5 - [ER Model] - Uvodni zadaci
+  * Vezbe 6 - [ER Model] - Zadaci
+  * Vezba 8 - [JDBC] - Konekcija baze podataka preko Jave
+  * Vezba 9 - [Datoteke] - Organizacija podataka
+  * Napomena : Zadaci su vecinom iz zbirke zadataka
+
+* Skripta za usmeni 
+  * Kratka rekapitulacija najbitnijih tema koje dolaze na usmeni. 
+  * Neophodno je dati odgovor na sva 3 pitanja koja budu postavljena. 
+  * Jedno pitanje je ER model, drugo je Relacioni model, trece je iz ostatka gradiva
+
+

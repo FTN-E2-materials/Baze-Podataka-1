@@ -1,0 +1,112 @@
+	1) Osnovni pojmovi 
+		- Odnos realnog sveta i IS 
+		- Zasto gradimo IS 
+		- Od cega se sastoji IS (racunar, BP, aplikacije, korisnici, dokumentacija, maintenance)
+		- Tipovi struktura podataka (TE TP TPE TPP Obelezje)
+			i o svakoj ponesto
+		- Tipovi obelezja (elementarno, slozeno, skupovno)
+		- Podatak i kontekst podatka (ime, obelezje, vreme, vrednost)
+		- Identifikatori (int, ekst) i kljucevi 
+		- Strukture podataka (LSO, LSP, FSP)
+			Nacini predstave (graf, tabela)
+
+	2) Koncepcija baze podataka
+		- Klasicna (stara) organizacija podataka
+			Sta i kako, i zasto ne valja 
+		- Ideja modernih baza podataka (sve na jednom mestu)
+		- SUBP, zasto se koristi
+		- DDL DML QL
+		- Sema i podsema, sta kako i zasto 
+		- Sistem baze podataka (BP, SUBP, DDLDMLQL, Sema/podsema)
+
+	3) Modeli podataka
+		- Cemu sluzi model podataka (LSO, apstrakcija)
+		- Od cega se sastoji? (S I O)
+		- Intenzija i ekstenzija 
+		- Strukturalna komponenta
+			Primitivni, pravila, slozeni
+		- Integritetna komponenta 
+			Primeri, tipa ogranicenja kljuca, domena, kardinaliteta 
+			Validacija podataka gde se radi i zasto 
+		- Operacijska komponenta 
+			- Sta ima svaka operacija (osobine (formalna spec, izvrsenje), pravila, semantika)
+			- DDL DML QL (cemu sluze)
+			- Specifikacija operacije (aktivnost, selekcija)
+			- Tipovi operacije (proceduralna, specifikaciona)
+
+		- Razliciti tipovi modela podataka 
+			ER, mrezni, hijer., relacioni, OOP, XML, ...
+
+	4) ER model
+		- Sta je i cemu sluzi (staticko graficko modeliranje)
+		- Od cega se sastoji (entiteti poveznici)
+		- Strukturalna komponenta 
+			- Vrednost, domen, obelezje 
+			- Tipovi domena (predefinisani, korisnicki definisani)
+			- Obelezje (sta je i sta ga cini)
+			- Podatak (entitet, obelezje, vrednost, vreme)
+			- TE TP TPE TPP
+		- Integritetna komponenta 
+			- Ogr. domena, pojave tipa, kardinaliteta i kljuca 
+				O svakom ponesto 
+		- Gerund 
+			- Sta znaci tj. sta predstavlja i kada se koristi 
+		- Agregacija 
+			- Sta je i kada se koristi 
+		- Tipovi entiteta (slabi, jaki)
+		- Tipovi zavisnosti (egzistencijalna, ID) i primeri
+		- IS-A hijerarhija 
+			- Cemu sluzi i kako funkcionise 
+		- Kategorizacija
+			- Cemu sluzi, kada i kako se koristi 
+		- Nivoi detaljnosti na ER dijagramu (globalni, detaljni)
+
+	5) Relacioni model - Koncepcija 
+		- Sta je bio problem inicijalnih baza podataka
+		- Koji su motivi uvodjenja relacionog modela, i kako je razvijen (matematicke apstrakcije, opsta primena itd)
+		- Relacija (sta je i kako se prikazuje (tabela ugl))
+		- Selekcija podataka (kako pre, kako u relacionom (adresa nekad, sad kljuc)
+		- Povezivanje podataka (kako pre, kako u relacionom (isto adresa - kljuc)
+		- Deklarativni jezik 
+			Relaciona algebra i racun (algebra unija/presek/razlika, racun nad n-torkama sa ==/!/where in i slicno)
+		- SQL, deklarativni jezik, sta to znaci, koje su neke ceste komande (select, from, where)
+		- 12 pravila RMP (mozda nebitno)
+
+	7) Eksterna memorijska fizicka organizacija 
+		- Sta je datoteka (FSP, LSP)
+		- Zasto se koristi eksterna memorija (sta su gubici, sta dobici)
+		- Razliciti tipovi cuvanja podataka (OM, diskovi)
+		- Struktura magnetnih diskova (kontroler, memorija) i njihovi poddelovi
+		- Osnovne komponente diska (cilindar, staza, sektor, celija)
+		- Uspostava adresnog prostora na disku (OS formatira, ucitava memoriju, slobodno, pokvareno itd)
+		- Kapacitet diska (mnozimo sve delove diska)
+		- Kapacitet sektora (efektivni + header + prateci deo)
+		- Vreme pristupa sektoru (kako tacno ide)
+		- Sprezni podsistem (kako su povezani OM i disk), bandwidth, blokovi, bafer, kontroler i dr.
+		- Tipovi sistema disk jedinica (klasteri, RAID)
+		- Performanse diska, od cega zavise i kako ih unaprediti 
+
+	8) Datotecki sistem
+		- Cemu sluzi? (FSP, upravlja razmenom podataka app<->datoteka)
+		- Nivoi usluge (niski visoki)
+		- Pripadnost nivoa (niski - OS, visoki - OS, lib, subp)
+		- Usluge nivoa
+		- Upravljanje eksternom memorijom
+		- Katalog
+		- Rutine za upravljanje fizickom razmenom podataka
+		- Tabele operativnog sistema (*)
+			- Tabela uredjaja TU
+			- Sistemska tabela datoteke (STD)
+			- Alokaciona tabela datoteke (ATD)
+			- Tabela logickih imena datoteke (TLI)
+			- Tabela otvorenih datoteka (TOD)
+			- Tabela opisa datoteke (TOS)
+			
+ 	  Sistemski pozivi
+		- Cemu sluze (niski nivo komunikacije)
+		- Kakvi pozivi postoje i po cemu se razlikuju (sekvencijalni i direktni)
+		- O cemu pozivi vode racuna (start, curr, end)
+		- Tipovi sistemskih poziva (create, read, seek...)
+
+	// Nedostaju prezentacije sa kraja
+	

@@ -1,0 +1,281 @@
+ER (Entity relationship) diagram 
+
+	- OSNOVNI POJMOVI
+
+		- Sluzi za graficku, staticku predstavu odnosa entiteta i poveznika. 
+		- Koristi prethodno navedene pojmove:
+			- Obelezje i domen
+			- Tip entiteta i tip poveznika (TE, TP)
+			- Pojavu tipa entiteta i pojavu tipa poveznika (PTE, PTP)
+
+		- Klasa entiteta
+			- Osnovna jedinica poslovanja/posmatranja 
+			- Predstavlja skup entiteta koji imaju zajednicke osobine 
+			- Klasican primer entiteta bi bio STUDENT u bazi podataka fakulteta
+
+		- Klasa poveznika 
+			- Veza izmedju 2 ili vise entiteta ili prethodno napravljenih poveznika 
+			- Skup poveznika koji poseduju zajednicke osobine 
+
+		Primer upotrebe entiteta i poveznika:
+			- Recimo da imamo studente na fakultetu.
+			- Uz studente imamo i predmete 
+			- Relacija u stvarnom svetu je STUDENT ----POHADJA---> PREDMET
+			- Preneto na model, ovo bi znacilo:
+				- Entiteti: Student, Predmet
+				- Poveznici: Pohadja
+				- U poluformalnom zapisu: Pohadja(Student, Predmet)
+
+	- STRUKTURALNA KOMPONENTA
+
+		- Primitivni koncepti strukturalne komponente ER modela: 	
+			- Vrednost (podatka)
+			- Domen
+			- Obelezje 
+		Odnosno, kada spojimo u definiciju, svaki atribut ima vrednost koja mora pripadati
+		odredjenom domenu vrednosti.
+
+		- Vrednost je neka vrednost iz bilo kog skupa vrednosti 
+		- Domen je specifikacija mogucih vrednosti obelezja. Vezuje se za jedan tip vrednosti (npr realni brojevi)	
+		- Obelezje je naziv obelezja za koje se vezuje vrednost
+
+
+		- Domen 
+			- Predefinisani
+				- Ugradjen u definiciju modela podataka
+				- Zavisi od okruzenja koje koristimo (koji jezik uglavnom)
+				- Teoretski imamo (N, Z, Q, R...)
+				- Prakticno imamo (int, float, double, string, boolean, ...)
+			- Korisnicki definisani 
+				- Koristimo vec postojece domene da ih definisemo 
+				- Npr. ako hocemo da definisemo skup vrednosti za ocenu studenta:
+				  DOMEN_OCENE ::= {d -> N | d >= 5  &&  d <= 10}
+				  DOMEN_IME ::= String(30)  -> String max duzine 30
+
+		- Obelezje 
+			- Osobine klase realnih entiteta 
+			- Svako obelezje ima svoju oznaku 
+			- Obelezja se u OOP prenose u obicna polja u klasi, dakle (objekat.obelezje)
+			- Svako obelezje ima tacno 1 domen vezano za sebe 
+
+		- Podatak
+			- Uredjena cetvorka (ENTITET, OBELEZJE, VREDNOST, VREME)
+			- Entitet
+				- Oznaka entiteta kojem pripada vrednost
+			- Obelezje
+				- Oznaka obelezja kojem pripada vrednost 
+			- Vrednost
+				- Vrednost samog podatka
+			- Vreme 
+				- Vremenska odrednica 
+
+		- Tip entiteta 
+			- Model klase realnih entiteta u IS
+			- Nastaje kao posledica mapiranja realnih entiteta u informacioni svet, radi postizanja odredjenih ciljeva 
+			- Sastoji se od: 
+				- Naziva
+				- Skupa obelezja
+				- Skupa ogranicenja
+				- Skupa kljuceva 
+
+		- Pojava tipa entiteta 
+			- Jedna instanca tipa entiteta u IS 
+			- Konkretizovane vrednosti obelezja 
+			- Predstavlja skup podataka koji se ponasaju onako kako tip entiteta nalaze (definicije, domeni i dr.) 
+
+		- Tip poveznika 
+			- Model veze izmedju drugih struktura (TE ili TP)
+			- Sastoji se od:
+				- Naziva
+				- Naziva povezanih TE ili TP
+				- Skupa obelezja
+				- Ogranicenja TP
+				- Skupa kljuceva 
+			- Poveznici ne moraju da povezuju samo 2 TE/TP, mogu i vise 
+			  Takvi TP se zovu N-arni. 
+			  Npr. poveznik moze da vezuje Studenta, Predmet i Profesora. 3 komada.
+
+		- Pojava tipa poveznika 
+			- Reprezentuje jedan konkretan poveznik, tj instancu poveznika u IS
+	
+
+	- INTEGRITETNA KOMPONENTA
+		- Tipovi ogranicenja u ER modelu:
+			- Ogranicenje domena
+			- Ogranicenje pojave tipa 
+			- Kardinalitet TP
+			- Ogranicenje kljuca 	
+
+		- Ogranicenje domena 
+			- D(id(D), predef)
+				D        -> Naziv domena
+				id(D)    -> Ogranicenje
+				predef   -> Predefinisana vrednost domena 
+			- id(D) se sastoji od 3 komponente:
+				id(D) = (Tip, Duzina, Uslov)
+				- Tip je tip podatka koji se trazi. Jedini obavezan!
+				- Duzina je duzina podatka koja je dozvoljena. Navodi se samo kod tipova podataka koji ga zahtevaju (string npr.)
+				- Uslov je logicki uslov koji svaki podatak mora da ispuni da bi bio validan (tipa ocena > 4  && ocena < 11)
+
+				- Primeri ogranicenja:
+					- DOMEN_DATUMA((Date, -, d >= "1.1.1900."), -)
+						~ Tip podatka je Date, nema ogranicenje duzine, mora biti veci od 1.1.1900. i nema predef vrednost.
+			- Nula (nedostajuca vrednost)
+				- Kada hocemo da naznacimo da nekom polju nedostaje vrednost
+				- U programerskom kontekstu, ovo je klasican NULL
+				- NULL moze da znaci: Nepoznato, nepostojece, neinformativno.
+
+		- Ogranicenje vrednosti obelezja 
+			- ((Domen, Null), Predef)
+				- Domen je dozvoljena vrednost
+				- Null je True/False vrednost koja govori DA LI SME atribute da bude nepostojeci. Tipa ako imamo username, to ne sme 
+				  biti null. Sa druge strane ako imamo broj telefona, to mozda i moze da bude null.
+
+			- Predef je predefinisana vrednost
+				- Mozemo je ili mi definisati
+				- Ili mozemo da pustimo da uzme default vrednost domena kojem pripada podatak
+
+		- Ogranicenje pojave tipa 
+			  id(N) = ({id(N,A)}, Uslov)
+			- Ili normalnim jezikom receno, uslov koji svaka pojava tipa mora da zadovolji (entitet ili poveznik)
+			- U cemu je razlika u odnosu na ogranicenje vrednosti obelezja? 
+				~ Ogranicenje vrednosti obelezja se bazira iskljucivo na tom obelezju i nema uvid u ostala obelezja
+				  Odnosno, u ogr. obel. mozemo samo da kazemo npr. ovo obelezje mora biti vece od 5.
+				  Sa druge strane, u ogranicenju pojave tipa, imamo pristup svim obelezjima date pojave tipa,
+				  i mozemo da sprovodimo provere koje ukljucuju medjusobne odnose vise obelezja.
+				  Primera radi, student ne sme da bude druga godina i da nema nijedan polozen ispit. 
+				  Student sme da ima obelezje "GODINA = 2" i obelezje "POL_ISPITI=0" kada se gledaju zasebno.
+				  Ali ako se gledaju zajedno u okviru jedne pojave tipa, ovo nije dozvoljeno, jer bez polozenog
+				  ijednog ispita, nije mogao da upise drugu godinu.
+
+	- KARDINALITET
+		- Ogranicava u koliko pojava TP moze ucestvovati pojava povezanog tipa 
+		- Ili seljackim jezikom, govori u koliko relacija moze da bude objekat. Tipa ako imamo radnika u fabrici, on sme da radi 
+		  SAMO na jednom radnom mestu, ni manje ni vise. To je kardinalitet {1, 1}. 
+		- Minimalni kardinalitet {0, 1}
+		- Maksimalni kardinalitet {1, N}, N >= 2
+		- Sto se integriteta kardinaliteta tice, postoji par opcija:
+			- Jedan na prema vise 
+				- Jedan radnik moze imati jednu ulogu, ulogu moze da radi vise radnika
+			- Vise na prema vise
+				- Jedan radnik moze imati vise uloga, i uloge moze da radi vise radnika 
+				* Rekurzivni:
+					- Jedan radnik moze imati vise sefova, a jedan radnik moze biti sef za vise drugih radnika
+					- Entitet je u relaciji sa samim sobom
+			- Jedan na prema jedan 
+				- Jedan radnik ima jednu ulogu, i uloga je samo vezana za jednog radnika
+
+	- GERUND 
+		- U nemackom znaci glagolska imenica 
+		- U ER modelu predstavlja entitet koji se dobio transformacijom poveznika 
+		- Gerund je istovremeno i poveznik i entitet 
+		- Oznacava se na dijagramu bas tako, pravougaonik sa rombom oko sebe/u sebi.
+		- Seljackim jezikom receno, gerund bi bio recimo:
+			- Imamo studente. Imamo ekskurziju. Studenti ---(idu)---> na ekskurziju.
+			  Recimo da imamo jos jedan entitet, recimo dodela nagrada za studente sa ekskurzije. 
+			  Dakle student --(dobija)---> nagradu. Ali, SAMO studenti koji su BILI na ekskurziji smeju dobiti nagradu. 
+			  Znaci onaj poveznik (ide) iz prve recenice, ce nam postati GERUND, koji ce da se ponasa kao entitet, i znacice:
+			  "Ovo je entitet studenata koji su isli na ekskurziju". I onda nagrade povezemo sa tim gerundom da izrazimo uslov.
+
+	- AGREGACIJA 
+		- Objedinjavanje slozenih ER struktura 
+		- Posmatramo celu ER strukturu kao jedan tip entiteta
+		- Gerund je tip agregacije
+		- Primer: 
+			- Imamo radnika u firmi. Firma ima masine na kojima mogu da rade radnici. Ali ne mogu svi radnici da rade na toj masini,
+			  nego samo oni radnici koji rade na projektima smeju da je koriste. 
+
+	- TIPOVI ENTITETA
+		- Slabi 
+			- Egzistencijalna zavisnost 	
+				- Njihovo postojanje je uvezano za postojanje drugog entiteta 
+				- Primer:
+					- Radnik i radno mesto. 
+					- Radno mesto postoji uvek. Radnik radi na njemu. 
+					- Ako se ukine radno mesto, radnik gubi posao i vise ne postoji.
+			- Identifikaciona zavisnost (podskup egzistencijalne zavisnosti)
+				- Moraju se identifikovati preko ID-ja super-entiteta
+				- Primer:
+					- Radnik ima dete koje se belezi u neki spisak. 
+					- Dete ima svoje ime. Ipak, da bi se dete naslo u bazi, neophodno je uneti ko mu je roditelj.
+					- Odnosno identifikacija deteta direktno zavisi od toga ko mu je roditelj, i ne postoji van konteksta roditelja.
+				- Kao posledica identifikacije preko super-entiteta, kardinalitet ka super-entitetu mora biti {1,1}
+				  Jer logicno, ako bi pripadao uz vise super-entiteta, kako bismo ga pronasli, ako se vezuje uz roditeljski ID.
+		- Jaki 
+			- Postoje nezavisno od drugih 
+
+	- IS-A HIJERARHIJA 
+		- Uvodi koncept superklase i potklase 
+		- Koriste se koncepti generalizacije i specijalizacije 
+		- Specijalizacija se primenjuje kada superklasa poseduje potklase koje od nje nasledjuju osobine
+		- U superklasi ostaju primarni kljuc, i sve zajednicke osobine potklasa
+		  U potklasu se prenose samo promenljive vrednosti obelezja koje se menjaju od potklase do potklase 
+		- Kardinalitet potklase:
+			- Minimalni:
+				- 1  -> Totalna IS-A hijerarhija
+				- 0  -> Parcijalna IS-A hijerarhija
+				~ Ako je 1, znaci da superklasa mora biti produzena bar jednom potklasom.
+				  Ako je 0, znaci da je opcionalno
+			- Maksimalni:
+				- 1  -> Nepresecna IS-A
+				- N  -> Presecna IS-A
+				~ Ako je 1, znaci da superklasa moze da se nastavi u samo 1 potklasu 
+				  Ako je N, moze u vise potklasa 
+		- Primeri: 
+			{1, 1}  
+				Radnik moze da bude Programer, Dizajner, ili Sef. Ne moze 2 odjednom, vec samo jedno.
+			{1, N}
+				Radnik moze da bude Operativac na traci, sef magacina, ili kurir. A moze i sve odjednom, ili 2 odjednom.
+			{0, 1}
+				Radnik moze da bude sef ali ne mora da bude.
+
+		- Bitne osobine: 
+			- Potklasa koristi PK (primarni kljuc) superklase
+			- Potklasa moze imati svoj kljuc
+			- Potklasa je identifikaciono zavisna od superklase (logicno donekle)
+			- Potklasa moze dalje da se produzi svojim potklasama 
+
+
+	- KATEGORIZACIJA 
+		- Koristi se za klasifikovanje TE
+		- Svaki TE moze da se uveze sa vise kategorija (klasa TE)
+		- POJAVA TE moze da bude u najvise jednoj kategoriji 
+		- Ne postoji ID-zavisnost izmedju kategorije i TE 
+		- Primer:
+			- Clan kluba moze da bude Fizicko ili Pravno lice 
+		- Ako sam ja dobro uhvatio razliku izmedju ovoga i IS-A,  kategorije nemaju koncept superklase/potklase i nasledjivanja.
+		  Vec sluze samo kako bi se neki entitet kategorisao.
+	
+ 	- ER dijagram
+		- Koristi odredjene standarde za graficki prikaz elemenata BP
+		- Kako se prikazuju elementi:
+			- TE       ->  Pravougaonik
+			- TP       ->  Paralelogram
+			- Domen    ->  Elipsa 
+			- Obelezje -> Oblik pilule povezan sa TE/TP kojem pripada
+
+
+		- Ako imamo PRIMARNI kljuc, podvucemo ga da istaknemo da je primarni 
+		- Nivoi detaljnosti:
+			- Globalni nivo
+				- Prikazuje imena TE i TP
+			- Detaljni nivo (nivo obelezja i domena)
+				- Za svaki entitet prikazuje njegova polja/obelezja, kao i njihove domene
+
+		- Kod projektovanja, proces je uglavnom da 
+			- Imenica znaci entitet
+			- Glagol znaci poveznik 
+			- "<imenica> koja <glagol>" uglavnom znaci gerund
+			  'studenti koji su polozili ispit mogu da ______'
+
+	
+
+
+
+
+
+
+
+
+
+

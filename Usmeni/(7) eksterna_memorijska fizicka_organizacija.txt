@@ -1,0 +1,237 @@
+EKSTERNA MEMORIJSKA FIZICKA ORGANIZACIJA (harddiskovi i tako te stvari)
+
+	- Datoteka 
+		- Moze da se posmatra kao LSP ili FSP 
+		- LSP 
+			- Struktura nad skupom pojava JEDNOG tipa entiteta 
+			  tj. struktura koja sadrzi gomilu pojava jednog tipa entiteta 
+			- Uglavnom linearna struktura slogova (obj1, obj2, obj3...)
+
+		- FSP 
+			- Predstavlja jednu LSP, koja je smestena na eksterni memorijski uredjaj
+			- Osim podataka, sadrzi i informacije o samom nacinu smestanja LSP
+			  na fizicki uredjaj.
+
+	- Zasto koristimo eksternu memoriju?
+		- Pa logicno je da moramo negde da stavimo podatke kako bi ostali sacuvani (po mogucstvu i kada ugasimo masinu (dugotrajna memorija))
+		- Neophodno nam je da imamo memoriju koja ce moci da skladisti odredjeni (neretko veliki) broj podataka, i da to skladistenje bude trajno.
+		- Potreban nam je relativno brz nacin pristupa 
+		- I naravno, bitno je da memorija ne bude skupa po jedinici skladistenja ($/1GB se danas koristi uglavnom)
+		
+
+	- Razlicite opcije memorijskih uredjaja:
+		1) Operativna memorija (OM), ili RAM u nasim racunarima
+			- Pogodnosti:
+				- Brza od svega ostalog (citanje/pisanje) 
+				- Nema potrebe za transferom podataka ka eksternim uredjajima,
+				  sve moze da se nalazi u njoj, i pristup se svodi na teoriju algoritama i struktura
+				- Kratko vreme pristupa
+				- Vreme pristupa ne zavisi od lokacije podatka na medijumu (ovo imaju i SSD diskovi), jer se radi sa cipovima 
+
+			- Nedostaci 
+				- Malo memorije (RAM koristimo uglavnom izmedju 8 i 32gb, postaje skupo preko toga)
+				- Nema mogucnost da trajno memorise podatke (RAM se brise kad se ugasi racunar)
+				- Jako skupo gledajuci $/1GB odnos
+
+		2) Magnetni disk (HDD najcesce, moze biti CD, DVD i ostalo)
+			- Praktican izbor, i dalje se koristi zbog toga
+			- Prednosti:
+				- Veliki kapacitet
+				- Niska cena (danas su jeftini cak i za 1TB+)
+				- Mogucnost trajnog memorisanja podataka
+			
+			- Nedostaci 
+				- Vreme pristupa sadrzaju zavisi od njegovog mesta na medijumu (posto ima pomerajuce delove, onu iglu i sve to)
+				- Sekundarni tip uredjaja
+					~ Nema mogucnost da direktno prihvati informacije od CPU-a, vec mora da se uspostavi novi tunel komunikacije 
+				- Generalno vreme pristupa u odnosu na RAM/OM memoriju je mnogo vece (red velicine milisekundi)
+	
+	- Struktura magnetnih diskova 
+		1) Upravljacka jedinica uredjaja
+			- Upravljacka logika
+			- Adresni registar
+			- Registar podataka (prihvatna memorija, kada stigne zahtev za R/W spolja)
+			- Registar statusa uredjaja
+
+		2) Jedinica za memorisanje podataka
+			- Memorijski medijum (magnetni disk)
+				- Jedna ili vise kruznih ploca koje se rotiraju na istoj osovini 
+			- Adresni mehanizam (nekako da znamo gde je koja adresa, radi pretrage)
+				- Koracni motor (koji pomera uredjaj za citanje i pisanje)
+				- Skup R/W glava na nosacu, koje sluze za upis i ispis podataka sa ploca
+
+	- Osnovne komponente diska:
+		1) Staza
+			- Jedna kruznica na odredjenom poluprecniku na disku
+			- Kada pogledamo obican disk, ako uzmemo odredjeni poluprecnik, i pogledamo krug koji opisuje taj poluprecnik, 
+			  ta cela kruznica se zove staza ('track' na engleskom)
+		
+		2) Celija diska 
+			- Najmanja moguca jedinica upisa i ispisa 
+			- 1 bit 
+			- Moze biti + ili -, dakle 1 ili 0 
+
+		3) Cilindar 
+			- Ako imamo vise diskova u okviru medijuma, onda je cilindar skup svih STAZA koje se nalaze na istom poluprecniku.
+			- Kada se gledaju sa strane, posto su sve staze istih dimenzija zbog istog poluprecnika, moze da se zamisli kao da formiraju
+			  mali vertikalni cilindar 
+
+		4) Sektor
+			- Predstavlja luk (ugaoni luk) na stazi 
+			- Odnosno, komad staze koji je odredjen uglom od centra medijuma 
+			- Npr ako imamo stazu izdeljenu na 4 jednaka sektora, to ce biti 4 sektora sa uglom 90 stepeni (4x90 = pun krug)
+			- Izmedju svaka 2 sektora se nalazi medjusektorski razmak, da bi se znalo kada pocinje novi
+			! Najmanja ADRESIBILNA jedinica diska je sektor 
+				- Odnosno, citanje se desava na nivou bita, ali mozemo jedino ucitati ceo sektor odjednom, tako sto procitamo sve njegove bite
+
+
+		
+
+	- Uspostava adresnog prostora diska 
+		- Fabricka priprema + Formatiranje od strane OS 
+		- Fabricke karakteristike:
+			- C  ~ broj cilindara
+			- T  ~ broj staza
+			- S  ~ broj sektora na stazi 
+		
+		- Numeracija adresnog prostora: 
+			- Svaki cilindar, staza i sektor imaju svoj broj 
+			- Nulti cilindar je onaj sa najvecim poluprecnikom (onaj na samoj ivici diska)
+			- Nulta staza je odredjena redosledom glava na nosacu 
+			- Jedan od sektora se izabere da bude pocetni, pa ostali idu +1. Nulti sektor je pocetak staze 
+
+		- Bilo koja adresa na disku moze da se predstavi kao:
+			{u, c, t, s}
+				 U ~ adresa uredjaja (jedinice diska)
+				 C ~ redni broj cilindra 
+				 T ~ redni broj staze na cilindru 
+				 S ~ redni broj sektora na stazi 
+
+	- Kapacitet sektora
+		- Efektivni prostor
+			- Ono sto sme da se koristi za nase podatke 
+		- Zaglavlje sektora 
+			- Prostor u sektoru za upisivanje identifikacije tog sektora. Ili ako je sektor van upotrebe, da se obelezi da nije validan
+		- Prateci deo sektora 
+			- Kontrolni prostor za detekciju i korekciju gresaka 
+		
+		-> Ukupni kapacitet sektora je:
+			Efektivni + zaglavlje + prateci deo
+
+ 	- Kapacitet diska
+		= Broj cilindara (koliko diskretnih poluprecnika moze da se izdvoji)
+		+ broj staza (koliko svaki cilindar ima staza, odnosno za svaki disk imamo jednu stazu, pa ce 3 diska imati 3 staze po cilindru)
+		+ broj sektora po stazi
+
+		=> br_cilindara * br_staza_po_cilindru * br_sektora_po_stazi * efektivni_prostor_sektora = KAPACITET DISKA 	
+
+	- Vreme pristupa sektoru
+		- Sta sve moramo da uracunamo u vreme pristupa? 
+		- Pozicioniranje kompleta glava za R/W iznad cilindra
+		- Aktiviranje glava za stazu
+		- Pozicioniranje na sektor koji nam treba
+		
+		=> Ovo sve rezultira u par sekundi kasnjenja u odnosu na zahtev, jer je mehanizam ipak fizicki 
+
+	* ZONA 
+		- Kod nekih diskova imamo situaciju da u zavisnosti od duzine, tj. poluprecnika staze, imamo razlicit broj sektora na njoj.
+		- U tom slucaju, staze koje imaju isti broj sektora (koje su uvek susedne medjusobno) se nazivaju ZONA 
+
+
+	- Sprezni podsistem 
+		- Predstavlja sistem veza koji povezuje radnu memoriju (OM) i fizicke cuvare podataka (HDD recimo)
+		* Glavna osobina:
+			BANDWIDTH 
+		  odnosno, koliko podataka moze da putuje izmedju OM i HDD-a u jednom momentu, ili tehnicki receno:
+		  Moguci broj prenetih bajtova u jedinici vremena. 
+		  Veci bandwidth -> Vise mogucih podataka prenetih u jedinici vremena 
+
+		- Svaki OS ima fiksnu jedinicu prenosa podataka 
+
+		- Koncepti: 
+			- Fizicki blok 
+				- Organizaciona jedinica memorisanja podataka
+				- Nedeljiv komad podataka koji se smesta na eksterni uredjaj 
+				- Posto je nedeljiva, predstavlja osnovnu jedinicu ALOKACIJE na eksternom uredjaju (ne moze da se alocira manje od ovoga)
+				- Uvek zauzima ceo broj sektora (N)
+				- Uvek su u pitanju susedni sektori, na istoj stazi diska 
+
+				- Prednosti ovoga: 
+					- Uvek je dovoljno najvise jedno pozicioniranje da bi se ucitao ceo blok podataka
+				- Mane:
+					- Spoljna fragmentacija ~ na kraju staze mogu ostati neiskorisceni blokovi 
+					- Unutrasnja fragmentacija ~ ne mora ceo blok da bude sacinjen od korisnik podataka 
+
+			- Blok podataka
+				- Osnovna jedinica za transfer podataka. 
+				- Fiksni kapacitet 
+
+			Sto se ova 2 pojma gore tice, sve operacije u sistemu izmedju OM i eksterne memorije se odvijaju pomocu blokova. Dakle ne mozemo
+			da posaljemo samo 1 bajt da se upise, vec sve mora da ide u tim blokovima. 
+
+		
+			- Sistemski bafer 
+				- Sluzi kao prostor u OM koji smesta sadrzaj jednog bloka podataka
+				- Svaka razmena podataka izmedju OM i HDD, ide preko bafera 
+
+			- Kontroler jedinice diska 
+				- Sluzi da prima instrukcije od CPU 
+				- Prima adresu fizickog bloka na disku (posto on ne zna nista o relativnim adresama unutar programa, 
+									jedino sto zna su adrese samog sebe)
+				- Kako funkcionise? 
+					- Primi instrukciju 
+					- Dekodira instrukciju 
+					- Upravlja adresnim mehanizmom da bi ga pozicionirao tamo gde treba da se odradi instrukcija 
+					- PRIVREMENO memorisanje sadrzaja bloka (posle ga samo prosledi nazad na OM)
+						~ Takozvana cache memorija diska, uglavnom je 16MB
+
+			- U/I podsistem za fizicki prenos podataka 
+				- Sta mu je neophodno da bi radio kako treba? 
+					- Adresa bloka podataka na disku
+					- Adresa bafera u OM 
+					- Kapacitet bloka za prenos 
+					- Vrsta R/W operacije koja se desava 
+				- Sluzi za fizicku razmenu podataka izmedju HDD i OM
+
+
+	- Tipovi sistema disk jedinica
+		- Klasteri (clusters)
+			- Vise nezavisnih jedinica diskova, koji su povezani jednim spreznim sistemom za prenos podataka 
+			- Imaju jedinstven adresni sistem
+			- Svi diskovi se koriste kao da je jedan samo u pitanju? 
+
+		- Nizovi disk jedinica (Redundant array of independent disks (RAID))
+			- Vise jedinica diskova se ponasaju kao jedan 
+			- Ako jedan od diskova dozivi kvar, moze da se izmeni 
+			- Zasto se koriste? 
+				- Zbog brzeg multikorisnickog koriscenja 
+				- Zbog sigurnosti podataka (fizicke sigurnosti)
+				- Plan im je bio da se takmice sa jednim "super" diskom koji bi bio brzi od njih, ali da njihov broj i nacin funkcionisanja
+				  predstave konkurenciju tim velikim diskovima 
+
+			- Link:  https://en.wikipedia.org/wiki/RAID  
+			- Citat:
+			        "RAID се данас користи као umbrella израз за шеме рачунара који складиште податаке који могу бити подељени и поновљени 
+			         између више физичких дискова"
+
+
+	- Performanse diska 
+		- Postoje razni nacini da se performanse poboljsaju
+		- Kupovina boljeg diska (logicno). Npr uzmemo disk sa brzom rotacijom (7200 umesto 4800 rpm)
+		- Upotreba sistema diskova 
+		- Bolje koriscenje bandwidtha 
+		- Povecanje kapaciteta bloka za transfer podataka 
+		- Minimizacija potrebnog broja pristupa disku (kesiranje, povecanje kapaciteta OM, ...)
+
+		- Generalno se svodi na izbor bolje opreme (HDD, OM, CPU) i bolju iskoriscenost prenosnog opsega i blokova.
+
+
+
+	- OS i diskovi 
+		- OS drzi belesku o proizvodjacu diska, i karakteristikama samog uredjaja 
+		- vodi racuna o neispravnim sektorima i zamenskim sektorima za pokvarene
+		- O zauzetom prostoru na disku 
+		* KATALOG 
+			- Struktura koja sadrzi pokazivace na sve opise datoteka 
+		* Sistemska alokaciona tabela 
+			- Sadrzi sve osnovne podatke o svim datotekama, kao i pokazivace na mesto tih datoteka u memoriji 

@@ -1,0 +1,203 @@
+MODELI PODATAKA 
+
+	- Pojam modela podataka 
+		- Model podatka je matematicka apstrakcija pomocu koje gradimo semu baze podataka
+		- Sluzi nam da predstavimo LSO (logicku strukturu obelezja)
+		- Osim LSO, pomocu modela mozemo da predstavimo i ogranicenja i odnose medju podacima
+		- Laicki receno, model nam sluzi da matematicki skiciramo sta kako iz realnog sveta prenosimo u svet racunara.
+		  Konkretan primer bi bilo OOP, gde koristimo klase kako bismo mapirali realne objekte u podatke. 
+ 		  Npr. osobu pretvorimo u 
+			Person { 
+			   name : ...,
+			   surname : ...,
+			   age : ...
+			}
+		jer je to sve sto nam je potrebno za funkcionisanje odredjenog sistema.
+
+	- Struktura modela podataka 
+		- Sastoji se od tri dela (S, I, O)
+
+		1) Strukturalna komponenta 
+			- Omogucava nam da modeliramo LSO kao staticku strukturu.
+		2) Integritetna komponenta
+			- Omogucava modeliranje ogranicenja nad podacima 
+			- "Koji podatak sme da uzme koju vrednost"
+		3) Operacijska komponenta 
+			- Modeliranje dinamike izmene stanja 
+
+	- Nivoi apstrakcije 
+		- Postoje 2: INTENZIJA i EKSTENZIJA 
+
+		1) Nivo intenzije (kontekst)
+			- Nivo tipa 
+			- LSO je nivo intenzije 
+			- Npr u Javi/C++, nivo intenzije je klasa, ona samo daje model kako nesto treba da izgleda
+		2) Nivo ekstenzije (konkretizacija) 
+			- Nivo pojave tipa (akcenat na 'pojave')
+			- Predstavlja konkretizaciju nivoa intenzije, sa podacima
+			- Ako je intenzija klasa, ekstenzija je objekat/instanca te klase
+
+		- Svedeno na cistu Javu bilo bi 
+
+			public class MyObject {
+			   private int number;		<--- Intenzija 
+			} 
+
+			
+			MyObject mObject = new MyObject(); 	  <--- Ekstenzija (instanca)
+
+		- Dobar primer je tabela sa primerima kako se intenzije pretapaju u ekstenzije: 
+			Domen          ->   Vrednost
+			Obelezje       ->   Podatak
+			Tip entiteta   ->   Pojava tipa entiteta (klasa -> objekat)
+			Tip poveznika  ->   Pojava tipa poveznika 
+
+ 
+	- Razrada komponenti modela podataka
+		1) Strukturalna komponenta: 
+			- Predstavlja koncept klase pojmova 
+			- Pomocu tih pojmova se predstavljaju objekti iz realnog sveta 
+			- Sastoji se od: 
+				- Primitivnih koncepata 
+					- Svaki sadrzi skup svojih osobina, nacine koriscenja i mogucu semantiku 
+					- Ovo su primitivne klase u Java/C++, dobijemo ih i ne mozemo da ih razbijemo na nize klase
+					  Primera radi, int ne moze da se rastavi na manje delove, niti mozemo da mu menjamo osnovnu semantiku (+, -, ...)
+				- Skup formalnih pravila 
+					- Pravila na osnovu kojih od PRIMITIVNIH i SLOZENIH koncepata mozemo da prosirimo model podataka
+				- Slozenih koncepata 
+					- Koncepti kojima dodelimo osobine, semantiku i nacin koriscenja 
+					- Primer slozenog koncepta bi bila klasa u Java/C++. 
+					  Imamo slozen objekat, koji radi samo ono sto mu dozvolimo da radi pomocu metoda.
+			
+		2) Integritetna komponenta 
+			- Skup TIPOVA OGRANICENJA 
+				- Uz definiciju kako da se izvrsi validacija datih ogranicenja 
+				- Uz pravila kako se koriste ogranicenja
+			- Skup pravila za izvodjenje zakljucka o vazenju ogranicenja 
+			- Skup pravila o kreiranju novih tipova ogranicenja 
+				- Podjemo od poznatih koncepata da bismo kreirali neki novi tip ogranicenja 
+
+			- Za sta nam sluze? 
+				- Dozvoljene vrednosti obelezja (podatka)
+				- Moguce vrednosti izmedju razlicitih pojava tipova.
+
+			- Primer:
+				- OGRANICENJE KLJUCA 
+
+				      Student ({IME, PRZ, JMBG, GODINE}, {JMBG})    <--- Tip entiteta (LSO, odnosno sema entiteta)
+
+				- OGRANICENJE DOMENA		
+				      Dom(GODINE) ::= {d < 26  &  d > 15} 	    <-- Ogranicenje domena za godine (student mora imati izmedju 15 i 26 godina)
+					  ~ Semantika ovoga nije sasvim korektna
+
+				- OGRANICENJE KARDINALITETA 
+					- Jedan nastavnik moze predavati najvise jedan predmet 
+					- Student iz jednog predmeta ima najvise jednu ocenu 
+
+			- Gde je najbolje uraditi validaciju podataka? 
+				- Mozemo u transakcione programe (ili na normalnom jeziku aplikacije koje koriste bazu)
+				- U SUBP (sistem za upravljanje bazom podataka)
+
+				- Idealno je ugraditi u SUBP tako da nista ne moze da prodje bez verifikacije na "vratima" baze podataka
+				- Nije lose ni neka ogranicenja ugraditi u aplikacije, kako bi korisnicima odmah izasla greska ako nesto
+				  lose uneli (primer web sajtovi kada nam odmah izbace gresku bez slanja podataka na server)
+
+		3) Operacijska komponenta 
+			- Modelira dinamiku izmene stanja u BP
+			- Laicki receno, govori nam kako stvari smeju da se desavaju i sta tacno sme da se desava sa podacima 
+
+			- Svaka operacija ima:
+				- Skup svojih osobina 
+					- Formalna specifikacija (npr. public void method(arguments...))
+					- Izvrsenje nad podacima 
+				- Skup pravila za koriscenje 
+				- Opisana moguca semantika 
+
+			- Koristimo je da definisemo DDL, DML, QL
+				- DDL
+					- Jezik za kreiranje i modifikaciju seme, fizicke strukture, prava pristupa u BP
+					- U principu ovim pravimo bazu podataka, govorimo sta gde i kako 
+				- DML 
+					- Tipovi operacija za izmenu stanja BP 
+				- QL
+					- Tipovi operacija za selekciju podataka iz BP 
+
+
+			- Specifikacija operacije sadrzi sledece komponente:
+				- Aktivnost
+					- STA zelimo da uradimo (koju akciju)
+				- Selekcija 
+					- Koji deo BP ili deo seme BP zelimo da targetiramo akcijom
+
+			- Operacijska komponenta moze biti 
+				- Proceduralna (low level)
+					- Govorimo programu STA i KAKO
+					- Primer su svi klasicni programski jezici (C, Java, C++ i dr.)
+					- Dakle kazem sta hocemo, ali onda kazemo programu i kako to hocemo tako sto mu damo set instrukcija 
+					  koje on izvrsava kako bismo dosli do cilja. Sami pisemo funkcije i sl.
+				- Specifikaciona (high level)
+					- Govorimo programu STA
+					- Primera radi SQL, kazemo samo SELECT * FROM RADNIK i on zna sta radi, mi ne moramo nista vise da kucamo 
+					- Da je OOP u pitanju, morali bismo da iteriramo kroz liste, da formiramo odgovor pa da ga vracamo.
+					
+	- Razliciti tipovi modela podataka
+	
+		- ER Model
+			- Predstavljamo graficki odnos entiteta i poveznika. Na konkretnom BP1 kursu je radjeno tako da je entitet
+			  pravougaonik, poveznik linija, i postojao je gerund kao romb.
+
+		- Hijerarhijski model	
+			- Strukture stabla (slicno kao sto funckionisu fascikle u ormaricima)
+			- Proceduralna operacijska komponenta (iteracije i slicno)
+	
+		- Mrezni model
+			- Nema nista pametno o ovome u prezentaciji. Zamisliti mrezu entiteta koji su medjusobno uvezani ko sa kim treba.
+
+		- Relacioni model 
+			- Stuktura tabela slogova (slog je grupa obelezja? Odnosno jedan slog je valjda jedan konkretan objekat/instanca?)
+			- Operacijska komponenta je specifikaciona (neproceduralna)
+
+		- Logicki i verovatnosni modeli 
+			- Uvodjenje dedukcije u bazu podataka? Ovo bi bilo dobro guglati jako je nejasno na prez.
+
+		- Objektno orijentisani model 
+			- Zasnovan na mreznom i semantickom modelu 
+			- Iza njega stoji OOP paradigma (koncepti klase, operacije, interfejsa, tipa podatka)
+
+		- Objektno relacioni model
+			- Kombinuje osobine relacionog i OO modela 
+
+		- XML model
+			- Koristi XML jezik za definiciju 
+			- Ugnjezdena struktura, tj hijerarhijski model podataka 
+			- Ima specificnu sintaksu sa <tagovima> koji se slazu jedan u drugi 
+				<tag1>
+					<tag2>
+						// content
+					</tag2>
+				</tag1>
+		
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			 

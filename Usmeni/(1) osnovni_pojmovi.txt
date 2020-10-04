@@ -1,0 +1,244 @@
+Osnovni pojmovi/Strukture podataka
+
+	- Odnos Realni svet <-> Informacioni sistem 
+	- Realni svet
+		- Cilj poslovanja 
+		- Resursi u poslovanju 
+		- Poslovni procesi
+
+	- Informacioni sistem (IS)
+		- MODEL realnog sveta 
+
+	- Sta je poenta izgradnje IS?
+		- Zelimo da predstavimo realni svet pomocu modela koji ce nam pruzati informacije NEOPHODNE (akcenat na ovo) za funkcionisanje 
+		  i UPRAVLJANJE realnog sistema.
+		- Namena IS je da podrzi upravljacki sistem realnog sistema 
+			
+		- Zadaci IS:
+			- Obuhvatanje svih bitnih podataka (sta nam je bitno da bi model realnog sistema bio upotrebljiv?) 
+			- Skladistenje podataka (baza)
+			- Prenos podataka 
+			- Prezentovanje podataka korisnicima 
+			- Obrada podataka 
+			- Automatizacija funkcija za upravljanje (da krajnji korisnik ne mora da radi rucno sve) 
+
+		- Cinioci IS:
+			- Racunarsko softverska komponenta (ono na cemu se IS pokrece)
+			- Baza podataka (moramo negde smestiti sve te podatke)
+			- Aplikacije za rad sa podacima (kasnije se pominje i kao transakcioni program)
+			- Projektna i korisnicka dokumentacija 
+				- Projektna govori kako se izradjuje IS, korisnicka je uputstvo za upotrebu 
+			- Krajnji korisnici 
+			- Tim za odrzavanje IS (maintenance)
+
+
+	- Tipovi strukura podataka: 
+	
+		- Entitet 
+			- Jedinica posmatranja 
+			- Cinilac poslovanja u realnom sistemu 
+			- Recimo, ako radimo sa bankom, osoba/korisnik bi mogla da predstavlja jedan entitet u IS. 
+	
+			- Klasa realnih entiteta: 
+				 - Skup entiteta koji poseduju zajednicko svojstvo
+				 - U jeziku OOP, ovo bi trebalo da bude isto sto i klasa?
+
+		- Poveznik
+			- Struktura koja predstavlja odnos 2 ili vise entiteta ili poveznika 
+			- U osnovi svakog IS se nalazi gomila entiteta u raznolikim odnosima (npr. ucenik pohadja kurs, profesor predaje predmet i dr.)
+			
+			- Skup poveznika: 
+				- Skup veza izmedju entiteta ili poveznika koje imaju neko zajednicko svojstvo
+
+			
+		- Obelezje 
+			- Predstavlja svojstvo klase entiteta/poveznika 
+			- Svako obelezje ima svoju oznaku u okviru klase ent/pov
+			
+			- Vrste obelezja: 
+				- Elementarno 
+					- Ne moze da se razbije na jednostavnije 
+					- Predstavlja osnovnu vrednost 
+					- Npr ovo bi bio broj stana, grad (samo ime), ime ulice, broj godina, itd.
+				- Slozeno 
+					- Moze da se dekomponuje na jednostavnije vrednosti 
+						- Npr Adresa, moze da se dekomponuje na {Ulica, Broj, Grad, Drzava}. 
+				- Skupovno 
+					- Predstavlja skup vrednosti istog tipa (kao array) 
+					- Recimo spisak svih racuna koje korisnik poseduje u banci (Array<BankAccount>)
+
+			- Domen 
+				- Specifikacija skupa mogucih vrednosti za neko obelezje
+				- Specifikacija dozvoljenih operacija nad obelezjem 
+		
+				- Domen moze biti 
+					- Predefinisani (int, String i dr. recimo)
+					- Korisnicki definisani (kad mi definisemo svoje objekte u OOP)
+
+				- Svako obelezje ima svoj domen 
+					- Recimo za studenta:
+						dom(ocena) = {5, 6, 7, 8, 9, 10}  -> Ocena sme biti samo ovo 
+
+		- Podatak 
+			- Cinenjica iz realnog sistema, nosi neku informaciju
+			- Uredjena cetvorka
+				- (ENTITET, OBELEZJE, VREME, VREDNOST)
+
+				- Entitet
+					- Oznaka entiteta 
+				- Obelezje 
+					- Oznaka obelezja 
+				- Vreme 
+				- Vrednost 
+					- Neka vrednost iz domena 
+
+
+			- Kontekst podatka
+				- Smisaona komponenta podatka 
+				- Sastoji se od 
+					(ENTITET, OBELEZJE, VREME)
+				* Ako eksplicitno navedemo samo vrednost, ta vrednost nema nikakav kontekst, cemu pripada, kom obelezju,
+				  te je samim tim beskorisna jer ne znamo kontekst u kom se ta vrednost pojavljuje. 
+				* Vreme nije obavezno, moze da se izostavi, ako pretpostavimo da je vreme onaj vremenski trenutak u kom se rukuje objektom.
+
+
+
+
+		- Tip entiteta 
+			- Model klase realnih entiteta u IS 
+			- Gradi se pomocu obelezja koja su bitna za realizaciju ciljeva IS 
+				- Sta ovo znaci: Kada modeliramo entitete, tj pravimo klase entiteta (kao klase u OOP), bitno nam je koje atribute/obelezja
+				  koristimo, kako bi IS mogao lepo da posluzi za upravljanje realnim sistemom. Znaci da moramo da ukljucimo sve 
+				  bitne podatke u model, kako bi mogao da oslikava stanje realnog sistema kako treba. 
+
+			- Sastoji se od 
+				- Imena klase/tipa
+				- Skupa obelezja 
+					- Obelezja tipa su PODSKUP skupa obelezja entiteta iz realnog sistema
+						- Ili seljackim jezikom, ne uzimamo iz realnog sveta SVE informacije, vec samo ono sto nam treba da IS radi
+
+			- Primer tipa entiteta:
+				Student({BRIndeksa, Ime, Prz, Godine})
+
+		- Pojava tipa entiteta
+			- Model JEDNOG REALNOG entiteta u IS
+			- Tip posmatramo kao blueprint, pojavu tipa posmatramo kao instancu tog blueprinta (kao odnos klasa->objekat u OOP)
+			- Moze da se posmatra kao N-torka atributa
+			- Primera radi, ako uzmemo tip entiteta Student od gore, POJAVA tipa entiteta bi bila:
+				Student({BRIndeksa, Ime, Prz, Godine}) -> {"RA1/2020", "Pera", "Peric", "22"}
+			- Pojava tipa je konkretizacija/instanca tipa
+
+		- Identifikator tipa entiteta 
+			- Obelezje ili SKUP obelezja koja imaju ulogu da jednoznacno obeleze svaki zasebni entitet. Otprilike kao kljuc.
+			- Identifikator moze biti: 
+				1) Interni
+					- Obelezja se nalaze u okviru entiteta 
+				2) Eksterni 
+					- Obelezja se ne nalaze u entitetu
+			
+				- Npr.
+					- Interni kljuc
+						Student({BRIndeksa, Ime, Prz, God})
+						- BRIndeksa je interni kljuc 
+		
+					- Eksterni kljuc 
+						Za svaki entry u bazi prikacimo neki broj tipa RBR, koji nije deo entiteta, vec samo broji koliko ih imamo 
+
+
+			- KLJUC Tipa entiteta 
+				- Minimalni INTERNI identifikator tipa entiteta 
+				- Svaki tip entiteta mora da poseduje bar jedan kljuc 
+				- Kljuc ne mora biti jedno obelezje, vec kombinacija 
+					Npr za placanje u banci, kljuc placanja moze biti {ImeKorisnika} + {VremePlacanja}
+
+			- Primarni kljuc 
+				- Jedan izabrani kljuc iz skupa kljuceva TE 
+				- Kod prikazivanja, radi isticanja neretko se podvuce da se istakne da je to primarni kljuc/identifikator
+	
+
+	- Tip poveznika 
+		- Entiteti iz realnog sistema se nalaze u odredjenim odnosima/relacijama (npr. KORISNIK u banci ima svoje RACUNE, dakle veza bi bila 
+		  Korisnik ---(poseduje)--> Racun  (ovo u zagradi bi bio poveznik) 
+
+		- IS treba da sadrzi model te veze izmedju korisnika i racuna 
+		- Tip poveznika povezuje entitete ili prethodno definisane poveznike
+
+		- Svaki tip poveznika mora da ima svoj identifikator, odnosno nacin da ga identifikujemo u bazi
+
+	- Pojava tipa poveznika .
+		- Predstavlja jedan poveznik u realnom sistemu, odnosno INSTANCU poveznika u IS
+
+	
+	Da demonstiram razliku:
+	
+		Tip poveznika: 
+			Poseduje(Osoba({Ime, Prz, JMBG}), Racun({BrRacuna}))
+
+		Pojava tipa poveznika 
+			Poseduje({"Pera", "Peric", "120031231"}, {0083102039120231})     -> Konkretizacija tipa poveznika 
+
+
+
+
+STRUKTURE PODATAKA 
+
+	- Podatke mozemo predstaviti kao orijentisani graf G
+	- Puna notacija za G je G(V, p)
+	- V su cvorovi
+	- p su grane 
+	- Cvorovi predstavljaju podatke
+	- Grane predstavljaju veze izmedju podataka 
+	- U kontekstu teksta iznad, mozemo reci da je V - entiteti, a p - poveznici 
+
+	- Vrste strukture podataka 
+		1) Logicke strukture obelezja (LSO)
+			- Struktura nad skupom tipova entiteta, poveznika i njihovih atributa 
+			- MODEL realnog sistema 
+			- Sastoji se od 
+				1) STE (skup tipova entiteta i poveznika)
+				2) RTE (skup relacija izmedju podataka)
+
+			- Sto se izvedbe grafa tice, postoje 2 varijante
+				1) Entiteti i poveznici se predstave kao cvorovi. 
+				2) Entiteti su cvorovi, poveznici su grane (odnosno linije izmedju entiteta)
+
+			- Imamo 2 nivoa prikaza
+				1) Globalni (gledamo samo entitete i poveznike)
+				2) Detaljni (gledamo atribute umesto imena TE i TP)
+
+			- Primera radi, Tip Entiteta je LSO koja definise model preko N-torke obelezja.
+
+
+		2) Logicka struktura podataka (LSP)
+			- Definise se nad skupom podataka, u kontekstu LSO 
+			- LSO je nacrt nad kojim se KONKRETIZACIJOM dobija LSP 
+			- Seljackim jezikom, LSO je skica kako nesto izgleda, LSP su stvarni podaci koji se ponasaju po skici koju definise LSO
+			  Prost primer je kako u OOP, klasa predstavlja nacrt koji govori kakva ce biti polja objekta, koji tip i to sve.
+			  Dok je sam objekat instanca klase, koja ima vrednosti. 
+			  U ovom slucaju, klasa je LSO, objekat je LSP
+			- LSP mozemo da predstavimo
+				- Grafom
+				- Tabelom (kao SQL)
+
+		
+		3) Fizicka struktura podataka (FSP)
+			- Logicka struktura podataka, SMESTENA NA MATERIJALNI NOSILAC PODATAKA 
+			- Osim samog LSP, tj. podataka, ukljucuje i informacije o tome KAKO cemo podatke smestati u memoriju, tj. na fizickog nosioca
+			- Zahteva malo naprednije koncepte, poput 
+				- Upravljanja memorijom
+				- Izbor lokacije za smestanje podataka
+				- Kodiranje podataka 
+				- Interpretacija sadrzaja 
+				- Pristupanje podacima 
+				- Selektovanje podataka 
+				- Azuriranje podataka 
+
+
+
+
+
+
+
+
+
+

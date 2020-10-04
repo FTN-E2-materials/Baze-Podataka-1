@@ -1,0 +1,61 @@
+KONCEPCIJA BAZE PODATAKA 
+
+	- Klasicna organizacija podataka je bila vezana za aplikacije 
+	  Svaka aplikacija je imala svoje skladiste podataka.
+	  Problem? Losa sinhronizovanost. Nepovezanost podataka. Cvrsta povezanost aplikacije i podataka. 
+	  REDUNDANTNOST podataka -> Potreba da se isti podatak cuva u vise fajlova zbog vise aplikacija.
+
+	- Svi gorenavedeni problemi su resivi, osim cinjenice da su podaci bili striktno vezani za aplikacije, i da ih je bilo komplikovano upotrebiti van nje.
+
+	- Ideja baze podataka:
+		- Organizovati sve podatke u jednu veliku datoteku (bazu podataka)
+		- Na ovaj nacin bi onda svaka aplikacija pristupala bazi i koristili bi se isti podaci za sve.
+		- Bilo je neophodno uvesti zaseban softver koji bi kontrolisao bazu podataka (SUBP)
+
+	- SUBP (Sistem za upravljanje bazom podataka) 
+		- Ideja je da postoji program koji ce da se bavi upravljanjem nad bazom
+		- Sta je morao da obezbedi: 
+			- Visekorisnicki pristup (sta ako vise aplikacija trazi podatke odjednom?)
+			- Autorizacija korisnika (ne sme svako da vidi sve podatke)
+		- Poenta je da svaka aplikacija koja koristi podatke, ne manipulise njima direktno, nego poziva SUBP metode koje su dozvoljene kako 
+		  bi pristupila podacima. SUBP se ponasa kao omotac oko baze, te proverava ko, sta i kako.
+
+		- Sadrzi 3 jezika u sebi: 
+			1) DDL - Data definition language 
+				- Jezik pomocu kojeg definise kako ce da izgleda baza. Koristi se za konstruisanje.
+			2) DML - Data manipulation language
+				- Jezik koji se koristi za manipulaciju podataka (izmene, dodavanje, brisanje itd.)
+			3) QL - Query language
+				- Jezik koji se koristi za citanje, tj selekciju podataka iz baze 
+
+	- Sema baze podataka 
+		- Programi koji koriste usluge SUBP, poznaju samo nacin na koji su podaci organizovani. Ne znaju nista o FSP
+		- S obzirom na ceste promene seme, dobro je uvesti koncept PODSEME 
+
+	- Podsema baze podataka
+		- Predstavlja LSO dobijenu na osnovu dela seme BP 
+		- Jedna podsema je dovoljna(ako je uzeta kako treba) da se za jednu aplikaciju izvrsavaju svi neophodni zadaci. 
+		- Predstavlja model manjeg/nepotpunog dela realnog sistema
+		- Pozeljno je da aplikacije koje koriste BP, to rade preko podsema 
+
+	- Sta je ideja uvodjenja seme i podseme?
+		- Nezavisnost
+		- Sema i podsema imaju uloge slicne interfejsima u programiranju. Dakle stvaramo nacin da programi ne budu vezani za same podatke,
+		  vec za neku apstrakciju, te SUBP moze da se menja, ali nas program ostaje isti.
+
+	- Pogled 
+		- Pojava LSP nad semom ili podsemom
+		- Predstavlja sliku baze podataka onako kako je programer vidi 
+		- Sema ili podsema predstavljaju "prozor" kroz koji programer/korisnik VIDI podatke u BP. Vidi, pa zato pogled.
+
+	- Sistem baze podataka 
+		- Sastoji se od 4 elementa:
+			1) Baza podataka
+				- Odnosno sami podaci
+			2) SUBP (Sistem za upravljanje bazom podataka)
+				- Racunari, serveri i softver koji hendluje podatke
+			3) Sema baze podataka, koja je implementirana nad SUBP
+			4) Jezici i operacije za kreiranje, azuriranje i selektovanje podataka u DB
+				- DDL, DML, QL
+
+	

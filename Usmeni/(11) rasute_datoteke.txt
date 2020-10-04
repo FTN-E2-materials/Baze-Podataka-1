@@ -1,0 +1,247 @@
+RASUTE DATOTEKE 
+
+	 - Neretko se naziva i "direktna", jer se slogu ili grupi slogova pristupa direktno, tako sto znamo memorijsku adresu na kojoj se nalazi
+	- Svaki slog mora da ima IDENTIFIKATOR, koji ga unikatno odredjuje.
+	  Identifikator ne mora da bude samo jedno, vec skup obelezja 
+	  Takodje moze da bude interni (primarni kljuc) ili eksterni (identifikator ne pripada datoteci vec se dodeljuje spolja)
+
+	- Objasnjenje:
+		Kako ovo sve radi? 
+		
+		Svaki kljuc odnosno identifikator se transformise u odgovarajucu lokaciju, tj. adresu u memoriji. 
+		Dakle imamo funkciju H, koja preslikava id -> Adresa
+		Kasnije detaljnije o tome
+
+	- Vrste preslikavanja
+		1) Deterministicka 
+			- Funkcija preslikavanja je '1-1', odnosno svakom identifikatoru odgovara samo jedna adresa 
+		2) Probabilisticka
+			- Funkcionise na osnovu generisanja pseudoslucajnih brojeva
+			- Svakom identifikatoru odgovara JEDNA adresa
+			- Ali svakoj adresi moze da odgovara VISE identifikatora (kao 1-vise preslikavanje)
+
+	- Nacin organizacije: 
+		- Slogovi koji su jedan do drugog ne moraju nuzno biti logicki susedni (npr. k=3 i k=4 ne moraju biti jedan do drugog)
+		- Slogovi su na SLUCAJAN nacin razbacani. Nacin razbacivanja zavisi od funkcije preslikavanja kljuca
+		
+		- BAKET 
+			- Tradicionalni naziv za blok kod rasutih datoteka 
+			- Faktor baketiranja (B) ~ analogija faktoru blokiranja, samo se drugacije zove posto koristimo bakete, inace ista stvar
+			- Transformacijom identifikatora sloga, dobija se ADRESA BAKETA 
+
+			- Sad cu da demonstriram kako to ide otprilike 
+				Recimo da je identifikator samo kljuc (K) koji je jedno obelezje tipa Integer
+				Recimo da je H = K%5 + 1    => Funkcija koja preslikava kljuc u jedan od sledecih brojeva {1,2,3,4,5}
+
+				Recimo da imamo sledece slogove (oznacicu kljuc sa K (prvi broj), a ostala obelezja sa X)
+					(11, X1), (12,X2), (23, X3), (45, X4), (123, X5)
+				Ako provucemo ove objekte kroz funkciju H od gore, dobicemo redom adrese baketa 
+					 2	   3	    4         1         4
+				I onda ako imamo 5 baketa (za svaku mogucu vrednost resenja funkcije H, imamo po jedan baket)
+					B1, B2, B3, B4, B5
+				Onda je logicno da ce sadrzaj ici ovako
+					B1 = {(45, X4)
+					B2 = {(11,X1), (45, X4)}
+					B3 = {(12, X2)}
+					B4 = {23, X3)}
+					B5 = {}
+				To bi bili baketi i njihovo popunjavanje na jednostavnom primeru.
+				E sad, recimo da hocemo da ucitamo iz memorije slog koji ima kljuc 23, kako to radimo?
+				Uzmemo njegov kljuc i provucemo ga kroz funkciju H
+					H(23) = 23%5 + 1 = 3 + 1 = 4
+				Odavde znamo da se slog sa kljucem 23 nalazi u baketu sa adresom 4 (odnosno B4)
+				I umesto da saltamo redom sve podatke kao kod serijske, mi samo DIREKTNO pristupimo baketu 4 i nadjemo slog koji nam treba.
+
+
+		- Vrste rasutih datoteka
+			- Staticke 
+				- Velicina adresnog prostora se unapred zna i odredjuje i ne menja se 
+				- Postoji pojam prekoracenja i prekoracioca 
+			- Dinamicke 
+				- Velicina dodeljenog adresnog prostora se menja, u zavisnosti od potrebe datoteke 
+
+
+	- Metode probabilisticke transformacije 
+		- Omogucavaju da se razliciti kljucevi mapiraju na isti baket 
+
+		- Ceste metode ovog tipa:
+			1. Metoda ostatka pri deljenju
+			2. Metoda centralnih cifara kvadrata kljuca
+			3. Metoda preklapanja 
+
+			1. Metoda ostatka
+				Uzmemo brojnu vrednost kljuca 
+				Podelimo je sa brojem B, i ostatak koji dobijemo je adresa baketa koji cemo koristiti 
+				Npr. 
+					K = 51, B = 5 (ako imamo 5 baketa)
+					51 % 5 = 1	=> Stavljamo (K=51, X) u baket 1
+
+			2) Metoda centralnih cifara kvadrata
+				Uzmemo brojnu vrednost kljuca i kvadriramo je 
+				Npr 51*51 = 2601 
+				Sad uzmemo taj broj 2601 i gledamo koliko imamo baketa (npr ako imamo 99 baketa radimo sledece)
+				Uzmemo odredjeni deo centralnih cifara ovog broja
+				Znaci za 99 baketa uzecemo 2 centralne cifre => 60 (od 2 60 1)
+				Stavljamo (K=51, X) u Baket 60
+
+			3) Metoda preklapanja 
+				Uzmemo brojnu vrednost kljuca 
+				Gledamo sve cifre koje ima da bismo ih preklopili
+				Npr. broj 102345 
+				Razdvojimo ga na jednake celine (10 23 45)
+				Preklopimo te celine kao sto bismo komad papira, tako sto sabiramo cifre koje legnu jedna preko druge 
+				10 32 (svaki drugi blok cifara obrnemo jer se ponasa kao papir) 45
+				Dobijamo broj 
+				(1+3+4) (0+2+5) => 87
+				Znaci stavljamo (K=102345, X) u Baket 87
+
+	- Karakteristike probabilisticke trans.
+		- Sinonimi
+			- Kada imamo 2 razlicite vrednosti kljuca koje se mapiraju na istu adresu baketa, nazivamo ih sinonimima
+			- Broj sinonima zavisi od toga koliko je kvalitetna funkcija raspodele za dati skup kljuceva 
+		- Maticni baket
+			- Baket na koji bismo po transformaciji trebali da smestimo slog (ovo nije uvek slucaj, ako je baket prepunjen recimo)
+		- Primarni slog 
+			- Slog koji je smesten u maticni baket 
+
+	* PREKORACILAC 
+		- Slog koji ne moze biti smesten u svoj maticni baket zato sto je baket pun
+		- Moramo ga smestiti u neki drugi baket 
+		- Pojava prekoracilaca je losa, zato sto narusava osnovnu strukturu koju pokusavamo da nametnemo rasutom organizacijom
+		- Sto je bolja ravnomernost popunjavanja maticnih baketa, to ce sansa da se pojavi prekoracilac biti manja 
+			~ Ili seljackim jezikom, ako imamo 10 baketa, a funkcija nam trpa sve slogove u 3 prva baketa, brzo ce doci do prekoracenja
+
+		- Sta jos utice na pojavu prekoracioca? 
+			- Faktor popunjenosti
+				- Govori nam na skali od 0 do 1, koji je stepen popunjenosti baketa (1 je pun, 0 je prazan)
+				- Mi diktiramo prilikom dizajniranja baketa, koji je ocekivani faktor popunjenosti
+				- Ako stavimo veliki faktor, memorijska iskoriscenost je odlicna, jer nema praznog mesta, ali se onda cesto javljaju prek.
+				- Ako stavimo mali faktor, redje cemo videti prekoracioce, ali s druge strane imamo malu iskoriscenost memorije 
+				- U praksi se koristi <0.8 faktor popunjenosti (80%)
+
+			- Faktor baketiranja 
+				- Odnosno, koliko nam slogova staje u baket 
+				- Ako je mali, velike su sanse za prekoracioca 
+				- Ako je veliki, onda imamo potencijalni problem gde kad prebacujemo podatke u OM, dobijamo mnogo podataka koji nam ne 
+				  trebaju. 
+
+	- Vrste datoteka u zavisnosti od nacina implementacije hendlovanja prekoracioca
+		~ Ili jednostavnije, kako se koja ponasa kad otkrije prekoracioca
+
+			- Sa jedinstvenim prostorom 
+				- Kada otkrijemo prekoracioca, slog se smesta u narednu sledecu slobodnu zonu (s obzirom na poziciju baketa)
+				- Kada trazimo prekoracioca, prodjemo maticni baket, i trazimo dalje na sledecim lokacijama dok ga ne nadjemo
+				- Trazimo tako sto uzmemo adresu baketa, i na nju dodamo neki koeficijent k>=1. Pritom, primenjujemo modul na rezultat,
+				  kako ne bismo prekoracili broj baketa (npr ako imamo 10 baketa, a rezultat operacije bude 12, vracamo se na baket 2)
+
+				* Ova pretraga se smatra neuspesnom tek ako naidjemo ponovo na maticni baket a nismo ga nasli
+
+				- Brisanje sloga: 
+					- Logicko:
+						- stavimo status aktuelnosti na "Neaktivan"
+						- sam status aktuelnosti mora imati 3 vrednosti: {Aktivan, Neaktivan, Slobodna_lokacija}
+					- Fizicko
+						- Obrisemo slog
+						- Oslobadjamo lokaciju 
+						- Svi prekoracioci se vracaju za jednu lokaciju unazad u odnosu na maticni baket
+
+				- Mane ove organizacije:
+					- Efekat nagomilavanja prekoracioca 
+						Zamislite da imamo jedan baket koji se puni vise nego ostali. Recimo B1. On se prepunio i sad preliva
+						u druge bakete. Dakle B1 je napunio pola B2 jer nema gde da smesti svoje slogove. B2 se normalno puni,
+						ali zbog toga sto ga je B1 zatrpao svojim prekoraciocima, onda je i B2 prepun, pa se preliva na B3.
+						I tako u krug.
+					- Neefikasno trazenje 
+						- Trazenje se vrsi u baketima koji ne sadrze slogove sinonime sa trazenim 
+					- Neefikasno neuspesno trazenje
+						- Moramo bukvalno preci ceo memorijski prostor da bismo nasli slog (u najgorem slucaju)
+
+				- Postoji varijacija ove organizacije, gde umesto da B1 puni B2 kad se prekoraci memorijski limit, puni neki drugi baket.
+				  Koji baket ce da se puni se odredjuje novom pseudotransformacijom, te umesto B(1+1) = B2, imamo neki K, takav da kada
+				  B1 prelije, puni se neki B(1+K) = Bx
+				  Na ovaj nacin se donekle sprecava lancani efekat prekoracenja koji sam gore opisao.
+
+		- Sprezanje u primarnoj zoni
+			"To je samo ideja da ti grupises neke bakete kao slicne, te oni dele medjusobno svoje prekoracioce.
+			 Znaci imas neki O baket, koji ne cuva podatke, nego samo pokazuje na pocetak lanca.
+			 I onda svaki baket iz tog lanca ima regularan sadrzaj, slogove kao i inace,
+			 ali u headeru sadrzi jos i neke dodatne pokazivace za navigaciju.
+			- Header sadrzi:
+				- U	~ Pokazivac na lanac sinonima 
+				- B	~ Pokazivac na prethodni u lancu slobodnih 
+				- N	~ Pokazivac na sledeci u lancu slobodnih 
+				- E	~ Broj slobodnih lokacija u baketu 
+
+			Neka kvazigraficka predstava 2 lanca baketa:
+
+			O1   ->  B1 <-> B2 <-> B3 <-> B4 <-> B5 -> O1
+
+			O2   ->  B6 <-> B7 <-> B8 <-> B9 <-> B10 -> O2 
+
+			Nije bas sasvim tacno, svaki Bx ima pokazivac na svoj O, i pocetni i krajnji baket su uvezani, ali donekle prenosi ideju lanca.
+			Pritom, za svaku grupu baketa, postoje 2 lanca.
+				1) Lanac sinonima 
+					- Niz baketa koji su sinonimi (ovo gore sto sam graficki predstavio)
+					~ Ako se ne varam, lanac sinonima sluzi za pretragu, jer sadrzi i pune i polupune bakete
+				2) Lanac slobodnih baketa
+					- Niz baketa koji imaju slobodnog mesta u sebi	
+					~ Ako se ne varam, lanac slobodnih sluzi za dodavanje novih, jer sadrzi samo bakete koji imaju mesta
+
+				- Lanac slobodnih baketa je podskup lanca sinonima.
+
+		- Sprezanje u zoni prekoracenja 
+			- Ako je maticni baket popunjen, slog se smesta u prvi slobodan baket iz lanca slobodnih
+			- Ako je doslo do prekoracenja, u lanac maticnog baketa za prekoracenje se upise slog koji je prekoracio
+			- Baketi sa slobodnim lokacijama se jednostruko sprezu, i postoji opet nulti baket koji pokazuje na pocetak ovog niza 
+			- Vrsi se sprezanje svih prekoracilaca 
+				- Svaki maticni baket ima jedan lanac prekoracilaca 
+				- Pokazivac na pocetak ovog lanca je u maticnom baketu (header)
+				- Prekoracioci medjusobno pokazuju na sledeci
+
+		- Serijska zona prekoracenja 
+			- Svaki baket ima svoju datoteku koja sadrzi prekoracioce za taj baket
+			- Koristi se kad se ocekuje mali broj prekoracilaca, jer nema poente uvezivati pokazivacima ako ih nema puno
+
+	- Dinamicke rasute datoteke 
+		- Generalna ideja ovaj tip organizacije ne dopusta prekoracioce, jer uskladjuje velicinu baketa sa potrebom za novim slogovima.
+
+		- Imamo adresar i bakete
+		- Adresar sadrzi skup pokazivaca na razlicite bakete 
+		- Baketi sadrze slogove i neke oznake:
+			- b	=> Maksimalan broj slogova za taj baket
+			- d'    => Takoreci sifra baketa, konkretno, broj pocetnih bitova transformacije kljuca koji su zajednicki za sve slogove tog baketa
+			- m	=> Trenutni broj slogova u baketu
+
+		- Svaki element niza u adresaru pokazuje na baket koji sadrzi slogove sa d' pocetnih bitova transformacije 
+			Sta ovo znaci? 
+			Ako uzmemo neki slog sa kljucem K=x
+			I funkciju H(K) koja nam daje neki broj M
+			Uzmemo broj M u binarnom obliku, i pogledamo prvih N bitova. Tih prvih N bitova je ustvari ona oznaka d', koja je unikatna 
+			za svaki baket. 
+			Tipa ako imamo 4 baketa i d'=2, njihove oznake bi bile: '00 01 10 11'
+			Kad bismo uzeli d'=1, imali bismo samo: '0 1', tj 2 baketa, jer gledamo samo prvu cifru zbog d'= 1
+
+		- Dobra stvar je sto je adresar sitna struktura i moze komotno ceo stati u OM, te su sve operacije racunanja adrese baketa brze,
+		  jer ne zahtevaju pristup memoriji.
+
+		- Dva baketa su PRIJATELJI
+			ako se njihovi biti adrese razlikuju samo na bitu najmanje tezine (tipa 111 i 110 su prijatelji)
+
+		- Kako funkcionise deljenje baketa usred zasicenja (probijanja limita)?
+			Ja pretpostavljam, posto su prezentacije tragicno uradjene, da se ovo svodi na to da kad imamo baket koji je sifre "10", 
+			i pun je, da ga splitujemo na 2 baketa koji ce imati d'=3, i sifre respektivno "101" i "100". I onda sortiramo sve slogove 
+			iz baketa "10" tako da ih smestimo u odgovarajuci novi baket. 
+			Nisam siguran da ide tako, ali cini se logicno.
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,219 @@
+DATOTECKI SISTEM OPERATIVNOG SISTEMA 
+
+	- Cemu sluzi? 
+		- Upravlja datotekama 
+			- FSP na eksternim memorijskim uredjajima 
+		- Upravlja razmenom podataka izmedju aplikacija i datoteka 
+		- Obezbedjuje zastitu pristupa datotekama i ostecenje podataka
+		- Obezbedjuje podrsku preslikavanja FSP <-> LSP 
+
+	- Nivoi usluge:
+		- Niski nivo
+			- Gorenavedeni zadaci 
+			- Obezbedjuje LSP-FSP preslikavanja na nivou BAJTOVA
+
+		- Visoki nivo 
+			- Gorenavedeni zadaci
+			- Obezbedjuje LSP-FSP preslikavanje nad skupom slogova, blokova i bajtova
+			- Obezbedjuje izgradnju pomocnih struktura za obradu podataka 
+			- Obezbezdjuje trazenje na osnovu vrednosti podataka (search)
+
+	- Pripadnosti nivoa:
+		- Niski nivo pripada iskljucivo operativnom sistemu
+		- Visoki nivo moze da pripada:
+			- OS
+			- Bibliotekama u okviru programskog jezika (libraries)
+			- SUBP-ovima 
+				- Gorenavedeni zadaci su obavezni za svaki subp
+
+	- Usluge sistema:
+		- Niski: 
+			- Upravljanje prostorom eksternog memorijskog uredjaja
+			- Upravljanje katalogom 
+			- Upravljanje razmenom podataka izmedju OM i eksterne memorije 
+			- Upravljanje vezom izmedju programa i datoteke 
+			- Sistemski pozivi 
+
+		- Visoki 
+			- Metode pristupa 
+
+		Ukratko, niski treba da obezbedi najnizi nivo komunikacije izmedju elemenata sistema, dakle mora da obezbedi da funkcionise 
+		razmena informacija na relaciji EKSTERNA MEMORIJA <-> OPERATIVNA MEMORIJA <-> APLIKACIJE 
+
+
+	- Upravljanje eksternim memorijskim prostorom 
+		- Uspostava adresnog prostora i fajl sistema 
+			- OS treba da formatira disk
+			- OS treba da kreira strukturu podataka koja ce da evidentira koji blok diska je slobodan, a koji je zauzet
+		- Odrzavanje strukture podataka 
+			- Alocira slobodan prostor na poziv drugih delova OS 
+			- Dealocira slobodan prostor na poziv drugih delova OS 
+			- Defragmentacija (reorganizacija prostora u memoriji tako da nacini zauzece memorije efikasnijim, tj. da smanji neiskoriscene rupe)
+			- Arhiviranje i restauracija diska 
+				- Backup, restore i slicne funkcije 
+
+
+	- KATALOG 
+		- Predstavlja hijerarhijsku strukturu u obliku stabla, u kojoj se nalaze svi fajlovi i folderi iz sistema.
+		- Dakle kada otvorimo File Explorer na windowsu, on nam prikazuje ono sto se nalazi zabelezeno u katalogu 
+		- Katalog ima korenski direktorijum (pocetni), i on nastaje cim formatiramo disk 
+		- Ima cvorove koji predstavljaju ili FOLDER ili FAJL/DATOTEKU
+		- Sta sve mozemo da radimo sa katalogom? Pa maltene sve stvari koje smemo da radimo sa folderima/fajlovima u File exploreru
+			- Kreiramo, brisemo, menjamo ime, menjamo lokaciju 
+			- Izlistavamo sadrzaje foldera
+			- Kopiramo
+			- Pretrazujemo
+			- Dajemo ili oduzimamo pravo pristupa za odredjene korisnike 
+				~ Ovo recimo ako vise korisnika koristi racunar na vise naloga, pa zabranimo drugim nalozima da gledaju neke stvari
+
+
+	- Rutine za upravljanje fizickom razmenom podataka (drajveri)
+		- Sluze da upravljaju razmenom blokova kroz podsistem. Odnosno, upravljaju procesom razmene podataka izmedju 
+		  kontrolera eksternog memorijskog uredjaja i OM. 
+		- Imaju 3 koraka:
+			- Zadavanje parametara prenosa (sta, gde)
+			- Razmena poruka sa programima za fizicki prenos 
+			- Prosledjivanje statusa uspesnosti prenosa 
+
+	- Tabele operativnog sistema 
+		- Strukture za opis resursa kojima OS operativno upravlja
+		- Ispod ide opsirnije
+
+
+	- Tabela o uredjajima (memorijskim) (TU)
+		- OS odrzava tabelu o 
+			- Proizvodjackim karakteristikama disk jedinice (naziv, adresa, tip uredjaja)
+			- Broj cilindara, staza po cilindru, sektora po stazi 
+			- Numeracija sektora
+			- Ispravni i neispravni sektori 
+			- Zamenski sektori za neispravne 
+			- Slobodan prostor na disku 
+			~ Ovo su sve bitni podaci za funkcionisanje eksterne memorije 
+
+			- Drzi podatke koji su neophodni za koriscenje svih uredjaja u sistemu 
+			- Formira se prilikom startupa OS, ili kada se uredjaj nakaci na sistem
+			* Sadrzi adrese rutina za upravljanje fizickim prenosom podataka (driveri)
+
+			U Unix OS, tabela uredjaja se sastoji od:
+				Identifikacija uredjaja		Drajver uredjaja 
+									- Proizvodjac i ostale karakteristike 
+
+
+
+	- Sistemska tabela datoteke (STD)
+		- Struktura koja drzi podatke o datoteci
+		- Stvara se kad se stvori datoteka, i unistava se kad se datoteka obrise 
+		- Informacije o datoteci se ucitavaju u OM kad se ona koristi 
+		- Neke informacije vezane za datoteku iz sistemske tabele su: 
+			- Naziv
+			- Ekstenzija i verzija datoteke
+			- Vrsta (bin/txt)
+			- Podaci o vlasniku i ovlascenja za koriscenje (ko sme da je koristi)
+			- Velicina 
+			- Datum kreiranja i poslednje modifikacije
+			- Ostali atributi poput hidden atributa i sl.
+			* Alokaciona tabela datoteke 
+		- STD je spregnuta sa sistemom kataloga, tako da katalog moze da pristupi informacijama o svakoj datoteci koju sadrzi
+
+	* Alokaciona tabela datoteke (ATD)
+		- Mapa alociranog prostora na disku za datoteku 
+		- Kako se ovo izvodi? Preko skupa parova u formatu {pokazivac, broj_blokova}
+			Dakle, postoji niz parova koji govore gde se nalaze delovi datoteke, tj na kojoj adresi POCINJU (to govori pokazivac)
+			Sto se pokazivaca tice, on je klasican DISK pokazivac, sa sadrzajem {c,t,s}, odnosno, cilindar, staza, sektor. 
+			A onda broj_blokova govori koliko blokova date aplikacije se nalazi na datoj lokaciji, kako bi sistem znao koliko memorije da ucita
+		
+			Svaki put kada izmenimo datoteku, ovaj par se menja, kako bi pokrio celu datoteku, bilo brisanje ili dodavanje sadrzaja u pitanju.
+
+
+	- Tabela logickih imena datoteka (TLI)
+		- Sastoji se od skupa parova formata {ime_datoteke, pokazivac}
+		- Ime datoteke je logicko ime, pridruzeno datoteci sa aspekta aplikacije 
+		- Pokazivac ukazuje na zapis sa podacima o otvorenoj datoteci (u TOD)
+		- Objasnjenje upotrebe: 
+			Kada god neki proces zahteva da pristupi datoteci (R/W operacije), kernel sprovodi sledece:
+				Dozvoli pristup (ako sme)	
+				Stvori entry u TOD tabeli (tabela otvorenih datoteka)
+				Vrati procesu jedan entry koji u sebi sadrzi LOGICKO IME i POKAZIVAC NA TOD ENTRY koji je napravljen malopre
+				Proces taj entry koji mu vrati kernel, stavi u svoju tabelu logickih imena datoteka, i koristi ga kao HANDLE 
+				da bi koristio datu datoteku.
+			Sta je logicko ime? 
+				Nista drugo do obican nenegativni broj, koji sluzi procesu da razlikuje datoteke. 
+				Drzati na umu, da se svaki proces inicijalizuje sa 3 "premade" datoteke, ciji su "kodovi" (logicka imena) 0, 1, 2
+				0 je std input, 1 je std output, 2 je std error 
+			Kada proces hoce da koristi datoteku, on je koristi preko njenog logickog imena, tako sto nadje entry u TLI,
+			i taj entry referencira datoteku u TOD. 
+
+
+	- Tabela otvorenih datoteka (TOD)
+		- Svaki put kada neki proces otvori datoteku, to se upise u ovu tabelu
+		- Ako 2 razlicita procesa otvore istu datoteku, to rezultira u 2 nova entrija u TOD 
+		- Svaki zapis sadrzi podatke neophodne da se izvrsi razmena podataka izmedju aplikacije i datoteke
+			- Moguci nacini koriscenja datoteke (R/W)
+			- Pokazivac na tekucu poziciju u datoteci 
+			- Niz pokazivaca prema rezervisanim sistemskim baferima
+			- Veze izmedju blokova i sistemskih bafera
+			- Pokazivac prema TU/drajveru u tabel uredjaja
+			- Pokazivac na tabelu opisa datoteke (TOS)
+
+
+	- Tabela opisa datoteke (TOS)
+		- Kopiran sadrzaj STD, sa alokacionom tabelom datoteka, smesten u OM
+		- Tokom upotrebe datoteke se azurira
+		- Na kraju upotrebe datoteke, sadrzaj se prebacuje iz TOS-a u STD
+		- Ako dobro shvatam poentu ovoga, to je da se tokom upotrebe aplikacije koristi umesto STD, tj. sve izmene se rade na ovoj tabeli
+		  a onda na kraju se sve izmene prebace u STD gde se cuvaju trajno.
+
+
+// Ove 2 su malo mutne, posto nemaju englesko ime na prezentaciji, nisam nasao nista na guglu za njih
+	- Tabela o upotrebi datoteka u aplikacijama 
+		- Omogucuje vezu izmedju datoteka i aplikacija 
+		- Formira ih kompajler, a dopunjava OS 
+		- Sadrzaj podataka sadrzi izmedju ostalog:
+			- Format datoteke
+			- Zeljeni nacin upotrebe (citanje, pisanje)
+			- Zeljeni nacin pristupa podacima datoteke
+
+
+	- Tabela o datotekama u operativnoj upotrebi (oznaka?)
+		- Koristi se kada hocemo da operativno koristimo (?) datoteku iz aplikativnog programa
+		- OS priprema datoteku za upotrebu od strane aplikacije
+		- Tabela obezbedjuje uvezivanje podataka koji se nalaze u TU, STD i TLI
+			Tabela uredjaja, tabela logickih imena datoteka i sistemska tabela datoteka
+
+
+SISTEMSKI POZIVI 
+
+	- Pruzaju usluge niskog nivoa razmene podataka
+		- Pogled na datoteku kao na niz bajtova 
+		- Razmenu podataka izmedju datoteke i aplikacije (bajt level takodje)
+		- Upravljanje blokovima i formiranje blokova pomocu bajtova 
+		- Upravljanje sistemskim baferima 
+	- Omogucavaju nezavisnost aplikacija od same eksterne memorije, tako sto vrse memorijske transformacije
+	  Na ovaj nacin, stvara se apstrakcija, te aplikacije (hvala bogu) ne moraju da brinu o tome gde se sta smesta na disku
+	- Pozivi rutina:
+		- Sekvencijalni 
+			- Zahtevaju zadavanje ukupnog broja bajtova za operaciju R/W
+			- Sami brinu o pozicionim pokazivacima, ne moramo mi da ih zadajemo 
+			- Seljacki receno, mi samo kazemo koliko hocemo da ucitamo podataka, i sistem radi ostalo, tipa ako hocemo celu datoteku,
+			  sistem ce slati pozive da ucita malo po malo datoteke, i na svakom koraku ce da apdejtuje pokazivac pozicije 
+		- Direktni 
+			- Zahtevaju da se zada vrednost tekuceg pokazivaca u datoteci (tj. da kazemo sistemu gde zelimo da pocnemo citanje/pisanje)
+
+	- Vode racuna o sledecim stavkama:
+		- Pocetak datoteke (nulti bajt)
+		- Kraj datoteke (gde je poslednji bajt koji sadrzi podatke + 1)
+		- Indikator tekuce pozicije (pozicioni pokazivac kako sam gore naveo)
+			- Iskazan kao redni broj bajta na kom se zapocinje sledeca operacija.
+			- Kod sekvencijalne, tamo gde se zavrsila prethodna operacija, kod direktne tamo gde mu kazemo 
+
+	- Sistemski pozivi (razlicite funkcije takoreci, koje pozivamo da bismo radili sa datotekama):
+		Create		-> Kreira datoteku
+		Open		-> Otvara datoteku
+		Read		-> Cita deo sadrzaja iz datoteke
+		Write		-> Pise u datoteku
+		Seek		-> Pozicionira nas na zeljenu poziciju (pozicioni pointer)
+		Close		-> Zatvara
+		Sync		-> Praznjenje izmenjenih bafera
+		Delete		-> Brise datoteku
+		Truncate	-> Brisanje sadrzaja datoteke (skracivanje)
+		Stat		-> Preuzima informacije o datoteci

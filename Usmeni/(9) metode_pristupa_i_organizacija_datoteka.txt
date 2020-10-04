@@ -1,0 +1,88 @@
+METODE PRISTUPA I ORGANIZACIJA DATOTEKA 
+
+	- Osnovna struktura datoteke
+		- Organizacija nad tipom sloga (slog je ako dobro razumem, torka, tj entitet ili poveznik sa obelezjima) 
+		- Od cega se sastoji slog? 
+			- Kljuc
+			- Obelezja 
+			- Polje statusa (indikator aktuelnosti)
+			- Pokazivaci za memorisanje veza u LSP (?)
+			- Kontrolna polja za slogove varijabilne duzine 
+
+		- Duzina polja
+			- Konstantna 
+				- Nije potrebno memorisati informacije o granicama polja, posto znamo da su svi isti 
+			- Promenljiva 
+				- Potrebno je da definisemo gde se koji slog zavrsava
+				* Za ovo koristimo kontrolno polje!
+
+		- Duzina sloga 
+			- Konstantna 
+				- Ako su sva polja konstantna 
+			- Promenljiva
+				- Ako je neko od polja promenljivo
+
+		- Podela po ponavljajucim grupama
+			- Sa ponavljajucim grupama
+				- Slog dozvoljava visestruko pojavljivanje vrednosti u nekim atributima 
+				- Npr ako u objektu Zaposleni, imamo atribut Jezici, pa navedemo {Engleski, Nemacki, Srpski}
+				  To je polje sa 3 vrednosti
+				- Zahteva promenljivu duzinu sloga
+
+			- Bez ponavljajucih grupa 
+				- Slog ne dozvoljava ponavljanje u atributima 
+
+		- Polja pokazivaca u slogu
+			- Apsolutna adresa 
+				- Pokazuje na apsolutnu adresu u prostoru diska
+			- Relativna adresa
+				- Pokazuje na redni broj lokacije bloka ili bajta, ili bloka i bajta
+			- Simbolicka adresa
+				- Vrednost kljuca 
+
+
+	- Struktura datoteke 
+		- Logicki blok 
+			- Sastoji se od niza slogova 
+			- Ima konstantnu duzinu 
+			- Ta duzina najcesce predstavlja celobrojni umnozak duzine fizickog bloka (tipa ako je fizicki blok 512B, ovo je 1024B)
+			- Sadrzi faktor blokiranja (f)
+
+		- Fizicki blok
+			- Osnovna jedinica upisa i ispisa za eksterno-memorijsku jedinicu
+
+		Logicki blok ne mora biti veci od fizickog, moze biti iste ili manje duzine (mada ovo redje ide)
+
+
+	- Metode pristupa 
+		- Obezbedjuju paket rutina za usluge visokog nivoa 
+			- Citanje
+			- Pisanje 
+			- Otvaranje 
+			- Zatvaranje 
+			- Azuriranje 
+			- Pozicioniranje na blok ili slog 
+			- Brisanje 
+
+		- Obezbedjuju sloj apstrakcije preko niskog nivoa, tj. omogucavaju da aplikacije ne brinu o fizickim adresama, nacinu smestanja i sl.
+		- Korist niski nivo kako aplikacije ne bi morale same za sebe 
+		- Osnovna uloga:
+			Preslikavanje struktuirane datoteke u FSP niz fizickih blokova 
+
+		- Nacini razmene podataka
+			- Nivo sloga
+				- Obezbedjuje grupisanje slogova u blokove, i rastavljanje blokova na slogove 
+			- Nivo bloka
+				- Obezbedjuje razmeno podataka preko logickih blokova, izmedju datoteke i aplikacije 
+
+		* TIPOVI PRISTUPA 
+			- Sekvencijalni (redosledni)
+				- Redosledno pristupanje slogovima ili blokovima datoteke.
+				- Automatski se odrzava tekuci pokazivac (onaj koji pokazuje 'dokle je stiglo')
+			- Direktni 
+				- Omogucava imperativno pristupanje odredjenim slogovima ili blokovima, tako sto zadamo vrednost tekuceg pokazivaca 
+				- Mozemo da pristupimo preko:
+					- Rednog broja sloga ili bloka datoteke 
+					- Kljuca 
+			- Dinamicki (kombinovani)
+				- Kombinuje direktni i sekvencijalni pristup  

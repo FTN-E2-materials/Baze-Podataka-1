@@ -1,0 +1,140 @@
+SERIJSKA I SEKVENCIJALNA DATOTEKA 
+
+	- Pre svega da definisemo par osnovnih pojmova vezanih za odnos OM i eksterne memorije:
+		Prenos svih podataka izmedju OM i eksterne memorije se vrsi preko magistrale. 
+		Preko magistrale putuju blokovi podataka (kao gomile bajtova predefinisane velicine).
+		Blok je osnovna jedinica razmene podataka izmedju ekst. mem. i OM.
+		Blok je fiksne duzine (uglavnom je 512 bajta)
+		Kada eksterni memorijski uredjaj cita memoriju koja se nalazi na njemu, ne moze da cita bajt po bajt, ili nesto proizvoljno,
+		vec cita iskljucivo cele blokove. 
+		Znaci u kontekstu citanja i pisanja eksterne memorije, mozemo reci da 1 operacija citanja podrazumeva da fizicki uredjaj procita
+		sadrzaj jednog bloka (recimo tih 512 bajta), da ih kesira kod sebe u kontroleru, i onda prosledi preko magistrale u OM.
+		Znaci jedan blok je jedno citanje ili pisanje (R/W).
+		Ako zelimo da posmatramo razmenu podataka na kvantitativnom nivou (izmedju OM i ekst.mem.), posmatramo broj citanja ili pisanja
+		koje eksterna memorija mora da odradi kako bi ispunila to sto se trazi od nje. Svako citanje ili pisanje zahteva potencijalno 
+		pomeranje igli za citanje na disku, ucitavanje, slanje preko magistrale i dr. 
+		U prevodu, sto manje R/W operacija nam je neophodno da bismo obavili zadatak, to je taj zadatak brzi za izvrsavanje. 
+		Ovo se desava jer je ekst.mem. (bar ova o kojoj mi pricamo, HDD, diskovi i dr.) bazirana na fizickim komponentama koje se pokrecu.
+		Te to pokretanje rezultira u tome da je mnogo sporije od CPU i RAM memorije racunara. 
+		Dakle, cilj razlicitih organizacija datoteka jeste da za razlicite svrhe pruzi razlicite nacine za pristup podacima,
+		kako bi se minimizovalo potrebno vreme (odnosno, kako bismo optimizovali proces citanja, da zahteva sto manje moguce operacija).
+
+		Osim gorenavedenih blokova (koji su objasnjeni kao FIZICKI blokovi, dakle oni sa kojima radi disk), imamo i logicke blokove
+		sa kojima rukuje OM. 
+		Po cemu se razlikuju? Logicki blok je UGLAVNOM veci nego fizicki. Ne mora da bude, al uglavnom jeste. I uglavnom je veci od fizickog
+		za celobrojni umnozak (npr. fizicki nek je 512 bajta, logicki ce biti 1024 bajta).
+		Logicki blokovi u sebi sadrze i faktor blokiranja.
+
+		Sta je faktor blokiranja? 
+		Recimo da je velicina logickog bloka onih 1024 bajta od gore.
+		Recimo da hocemo iz OM da posaljemo informacije o korisnicima u ekst.mem.
+		Svaki korisnik ima {username : char[12], password : char[12]}. 
+		Recimo da korisnicki objekat zauzima 12 + 12 = 24 bajta (oba polja striktno 12 bajtova za 12 karaktera).
+		Koliko ce onda korisnickih objekata moci da stane u jedan logicki blok?
+		Pa uzmemo obicno deljenje, 1024/24= 42.67
+		Ovih 0.67 odbacimo jer nam je neophodno da upisemo ceo podatak, a ne pola. Tako da mozemo reci, da u jedan blok, staju 42 objekta korisnika.
+		To znaci da je za objekat korisnika u njegovoj datoteci, faktor blokiranja F = 42
+		* Definicija sa neta:
+			"The largest possible number of records of a given size that can be contained within a single block."
+
+		Na StackOverflow-u ima fin odgovor koji otprilike objasnjava ovo sto sam gore napisao: 
+		https://stackoverflow.com/a/19856856/10807811
+
+	- Serijska struktura
+		- Slogovi smesteni jedan za drugim (susedne memorijske lokacije)
+		- Fizicka struktura NE sadrzi informacije o vezama izmedju slogova 
+			- Ovo se desava jer su svi slogovi jedan do drugog, i pristupa im se sekvencijalno, samo iduci logikom 'currentPointer++;'
+		- Ne postoji veza izmedju kljuca sloga i adrese lokacije na koju je smesten 
+
+		- Redosled memorisanja slogova najcesce hronoloski na osnovu toga kad je koji nastao (prvo upisujemo najstarije)
+		- Slogovi mogu biti blokirani, al ne moraju 
+		- Nacin kreacije:
+			- Realtime (recimo ako posmatramo neke podatke koje meri neki uredjaj, ili kad korisnik salje poruke pa ih odmah pisemo)
+			- Batch rezim (ako premestamo fajlove sa druge lokacije)
+
+
+		- Pretraga u serijskoj datoteci
+			- S obzirom na to da su kljucevi nevezani za mesto sloga/torke u datoteci, jedino sto nam preostaje je da idemo redom 
+			  i da uporedjujemo. Ovo znaci da za datoteku od 10 hiljada blokova, moramo izvrsiti u NAJGOREM slucaju 10 hiljada citanja
+			  kako bismo dosli do traznog sloga. U proseku gledamo broj_blokova/2, sto je i dalje relativno neefikasno ako nam treba
+			  pristup nekoj konkretnoj vrednosti.
+
+
+		- Ubacivanje podatka 
+			- Sam upis je jednostavan, samo nadjemo kraj datoteke i upisemo slog u njega. Kratko vreme pristupa.	
+			- Problem:
+				- Da bismo upisali slog, moramo proveriti da li taj slog vec postoji. A to podrazumeva pretragu, koja moze biti podugacka.
+			- Zakljucak: 
+				Jednostavno, ali trazi puno citanja
+
+		- Brisanje podatka
+			- Najcesce je samo logicko (ubacimo neki flag ili nesto da naznacimo da je deleted)
+			- Fizicko brisanje bi zahtevalo premestanje podataka, sto nam nije u interesu
+			- Svakom brisanju prethodi PRETRAGA, da nadjemo to sto brisemo => Mnogo pristupa sto nije dobro
+
+		- Oblasti primene: 
+			- Kada imamo male datoteke, koje mozemo kompletno da naguramo u OM 
+			- Kada imamo tip datoteke u koju se cesto pisu stvari bez provere (recimo chat)
+			- Kada imamo datoteku koja ce se citati u celosti, a ne u delovima (recimo spisak svih transakcija u banci)
+
+		Postoji varijanta serijske strukture sa indeksnim strukturama, koje olaksavaju direktni pristup bez pretrage. O tome kasnije.
+
+	
+	- Sekvencijalna struktura
+		- Organizacija ista kao i kod serijske, u smislu da su svi slogovi jedan za drugim
+		- Ne postoji direktna veza izmedju kljuca sloga i adrese na kojoj se nalazi 
+		- Sta je onda razlika u odnosu na serijsku?
+			SORTIRANJE
+				=> Ova struktura ima sortiran niz slogova, po kljucu. 
+				   Tako da recimo na pocetku datoteke se nalaze slogovi sa najvecim kljucem, a na kraju sa najmanjim.
+			Prednosti ovoga?
+				Brza pretraga pomocu binary search algoritma, ili linearne pretrage (*)
+			Mane ovoga?
+				Cim ubacimo nesto, moramo sortirati ili premestati podatke nanovo (a to traje bas dugo)
+
+			Problem pretrage: Ako je datoteka velika da ne moze stati u OM, nema prakticnog smisla raditi binarnu pretragu na ekst.mem.
+
+			(*) 
+				Binarna pretraga -> guglati
+				Linearna pretraga -> Krenemo redom i uporedjujemo kljuceve. Dok su svi predjeni kljucevi manji ili veci od trazenog,
+					nastavljamo pretragu. Kada dodje do promene (odjednom kljucevi postanu manji ili veci od trazenog), a mi 
+					nismo nasli slog, znaci da ne postoji. 
+					Druga 2 scenarija su: nasli smo slog, dosli smo do kraja datoteke.
+					Ova pretraga opet zahteva veliki broj poredjenja, za razliku od binarne pretrage.
+
+		- Upis novog sloga
+			- Koraci:
+				- Pretrazimo da vidimo jel postoji slog sa tim kljucem
+				- Ako postoji, azuriramo
+				- Ako ne postoji, ubacimo ga na mesto na je doslo do promene monotonosti (kljucevi postaju manji ili veci od onog kog ubacujemo)
+				- Kad ubacimo, onda sve slogove posle ubacenog moramo pomeriti za po jedno mesto u desno
+
+		- Brisanje postojeceg sloga
+			- Koraci:
+				- Pretrazimo da ga nadjemo
+				- Obrisemo ako postoji
+				- Sve koji su iza njega pomerimo za jedno mesto u levo 
+
+		- Azuriranje postojece vrednosti
+			- Koraci: 
+				- Pretrazimo postojece vrednosti
+				- Kada nadjemo, azuriramo
+
+		Problematicni su upis i brisanje, jer imamo prvo pretragu, pa onda i pomeranje svih slogova (ovo moze biti bas zahtevno vremenski)
+
+
+// Nedostaju delovi vezani za redoslednu i direktnu obradu
+		
+
+
+
+
+
+
+
+
+
+
+
+
+

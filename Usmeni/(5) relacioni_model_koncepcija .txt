@@ -1,0 +1,93 @@
+RELACIONI MODEL - KONCEPCIJA 
+
+	- Inicijalni model BP je bio mrezni i hijerarhijski
+	- Konkretno 70te godine proslog veka pre uvodjenja relacionog modela 
+	
+	- Sta je bio problem? 
+		- Cvrsta uvezanost programa i baze podataka
+		- Neretko je manipulacija podacima bila direktno ugradjena u aplikacije 
+		- Proceduralni jezici za upravljanje podacima (nema sql nema nista)
+		- Razvijanje modela niz put, bez upotrebe matematickih formalizama 
+
+	- Dalje na scenu nastupa razvoj relacionog modela podataka
+	- Imao je za ulogu da otkloni nedostatke koje sam gore naveo vezane za mreznu i hij. arhitekturu
+	- Motiv je bio da se napravi nesto za laksu i opsteprimenjiviju upotrebu 
+	- Insistirano je na matematickim osnovama i formalizmima prilikom razvoja 
+
+	- Glavni zahtev je bio
+		Naciniti programe nezavisno od podataka, tj da BP postoji van konteksta aplikacije
+
+	- Strukturalna jednostavnost 
+		- Upotreba koncepta relacije 
+			- Relacija predstavlja osnovnu logicku strukturu u RMP 
+			- Ne sadrzi nikakve informacije o fizickom cuvanju podataka 
+			- Sluzi da bude razumljiva korisnicima 
+			- Cesto se koristi tabela za prikaz podataka 
+
+		- Selekcija podataka
+			- U starijim sistemima, koristilo se adresno pristupanje (apsolutne ili relativne adrese)
+			- Kod relacionog modela, upotreba kljuca za pristup
+			- Bilo koji podatak se selektuje na uniforman nacin, zadavanjem uslova, koji je najcesce kljuc
+			- Kada se zada kljuc, sam SUBP vodi racuna o nacinu pretrage i konvertovanju simbolicke adrese u realnu/fizicku
+
+		- Povezivanje podataka
+			- U starijim sistemima upotreba FIZICKIH ADRESA u funkciji pokazivaca.
+			- Kod relacionog modela simbolicke adrese, odnosno najcesce kljucevi 
+			- Uvodjenje pojma Stranog Kljuca (Foreign Key)
+			- Aplikacija koja koristi BP takodje ne vodi racuna o smestanju ili nacinu dobavljanja podataka, sve radi SUBP
+
+
+	- Deklarativni jezik 
+		- Dva alata za query language
+			- Relaciona algebra 
+				- Definisana pomocu teorije skupova i skupovnih operacija 
+				- Operacije poput Unije, Preseka, Razlike 
+				- Specijalizovani operatori poput (join, select, i dr.)
+
+			- Relacioni racun 
+				- Relacioni racun nad n-torkama i domenima 
+
+	- SQL - Structured Query Language 
+		- Zasnovan na relacionom racunu nad n-torkama
+		- Deklarativni jezik (govorimo sta, ali ne i kako, odnosno samo ZAHTEVAMO)
+		- Osnovne komande
+			SELECT (lista obelezja)
+			FROM   (lista relacija)
+			WHERE  (logicki izraz)
+
+			SELECT Ime, Prezime FROM Radnici WHERE (Godiste > 1975)
+				-> Dobavlja ime i prezime svih radnika koji su mladji od 1975-tog godista
+
+	- 12 PRAVILA RMP 
+
+		0. Sistem mora da bude relacioni, baza podataka, i sistem za upravljanje
+
+		1. Svaka informacija mora da bude predstavljena na samo jedan nacin, pomocu vrednosti u redu tabele, gde su kolone atributi
+		
+		2. Svaki podatak mora biti dostupan preko tabele, i primarnog kljuca reda u kom se podatak nalazi
+
+		3. Sistem mora da dozvoli upotrebu NULL vrednosti kao nacin da se specificira odsustvo vrednosti u tom obelezju 
+
+		4. Nesto vezano za online katalog, ne kapiram sta hoce da kazu 
+			'The system must support an online, inline, relational catalog that is accessible to authorized users by means of their
+			regular query language. That is, users must be able to access the database's structure (catalog) using the same
+			query language that they use to access the database's data.'
+
+		5. Sistem mora da podrzi bar jedan relacioni jezik 
+
+		6. Svi 'pogledi' (?) koji su otvoreni za apdejt, moraju da budu dostupni za izmenu vrednosti od strane sistema 
+
+		7. Sistem mora da podrzava SET, INSERT, DELETE metode
+
+		8. Fizicka nezavisnost, tj. izmene na fizickom nivou ne smeju da se odraze na nacin na koji se radi sa podacima 
+
+ 		9. Logicka nezavisnost, tj. izmene na logickom nivou (tabele, kolone, redovi) ne smeju da uticu na nacin na koji aplikacije rade sa BP
+		
+		10. Integritetna ogranicenja moraju biti zasebno definisana. Promena ogranicenja ne sme bezrazlozno da remeti podatke.
+
+		11. Ako BP ima razlicite distribucije na razlicitim mestima, ta distribucija mora ostati sakrivena od korisnika 
+
+		12. Ako sistem koristi nizi jezik u pozadini, nizi jezik ne sme da se koristi da bi se zaobisla ogranicenja na visem nivou
+
+
+

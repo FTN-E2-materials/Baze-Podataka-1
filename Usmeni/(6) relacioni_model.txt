@@ -1,0 +1,220 @@
+RELACIONI MODEL PODATAKA 
+
+	- Od cega se se sastoji? 
+		- Strukturalna komponenta 
+			- Primitivni i slozeni koncepti modela podataka
+			- Pravila za kreiranje slozenih koncepata 
+			~ Sluzi da se modelira LSO
+		- Operacijska komponenta 
+			- QL, DDL, DML
+			- Definise dinamiku izmene stanja
+		- Integritetna komponenta 
+			- Skup tipova ogranicenja 
+			- Sluzi da definisemo ogranicenja nad podacima (sta sme da uzme koju vrednost)
+
+	- Nivoi apstrakcije:
+		- Intenzija
+			- Nivo konteksta, ili nivo tipa
+			- Sluzi da se modelira LSO 
+		- Ekstenzija
+			- Nivo konkretizacije, ili nivo pojave tipa
+			- Sluzi da se modelira LSP 
+			- Ekstenzija predstavlja konkretne podatke stavljene u kontekst intenzije 
+
+	- Strukturalna komponenta 
+		- Primitivni koncepti
+			- Nivoa intenzije:
+				- Obelezje 
+					- Predstavlja osobinu entiteta ili poveznika u sistemu
+				- Domen
+					- Predstavlja dozvoljeni opseg vrednosti za obelezje (jedno obelezje = jedan domen, ni manje ni vise)
+			- Nivoa ekstenzije 
+				- Vrednost 
+		- Slozeni koncepti
+			- Kombinuju primitivne i postojece koncepte, pomocu dozvoljenih pravila
+
+		- Svaki entitet ili poveznik ima svoj skup obelezja (T = {A, B, C}, gde je T-tip, a ABC obelezja)
+
+		- Torka (N-torka)
+			- Predstavlja jednu pojavu entiteta ili poveznika 
+			- Pomocu nje, se svakom obelezju iz skupa obelezja TE/TP dodeljuje vrednost 
+			- Npr. jedna torka za studenta bi mogla biti Student = {"Pera", "Peric", "RA-1/2000"}
+					-> Konkretne vrednosti koje popunjavaju polja koja diktira LSO, tj intenzija
+
+			- Skracenja (restriktovana) torka
+				- Torka koja sadrzi PODSKUP obelezja neke druge torke 
+				- (Ja mislim da je ovo objasnjenje) Ako imamo tabelu Radnik u sql, ali nam odatle trebaju samo imena i prezimena
+				  svih radnika, koristimo komandu 'SELECT ime,prz from Radnik'
+				  Ta komanda nam vraca niz {ime, prezime} podataka, tj (skracenih)torki od 2 elementa, koje su podskup 
+				  torke Radnik koja ima vise polja (tipa Radnik ima JMBG, dan rodjenja i svasta nesto, ali mi fetchujemo samo ova 2)
+
+		- Relacija
+			- Konacan skup torki
+			- Predstavlja skup realnih entiteta ILI skup poveznika 
+			- Relacija u kontekstu SQL-a znaci TABELA. Tj. svaka tabela u sql je jedna relacija
+			- U relaciji se ne mogu pojaviti 2 identicne torke (sa svim istim obelezjima), jer je to onda ista torka prikazana dva puta
+			- Tabela se logicno predstavlja kao redovi + kolone, redovi su torke, kolone su obelezja
+			- Redosled torki u tabeli, i redosled obelezja ne utice na sam sadrzaj tabele 
+
+		- Sema relacije 
+			N(R,O)
+			- N  ~ Naziv seme relacije 
+			- R  ~ Skup obelezja seme relacije (skup obelezja LSO, tj skup kolona tabele)
+			- O  ~ Skup ogranicenja seme relacije (dozvoljene vrednosti domena)
+			Ili ukratko, kako se zove tabela, koje kolone ima, i kakve vrednosti smeju da idu u te kolone. Logicno.
+		- Pojava nad semom relacije 
+			(R,O)
+			- Bilo koja relacija R, takva da zadovoljava sve O (oznake iz gornjeg zapisa)
+
+		- RELACIONA sema baze podataka (nije isto sto i sema relacije)
+			(S, I)
+			- S  ~ Skup sema relacije (skup sema tabela odnosno)
+			- I  ~ Skup medjurelacionih ogranicenja 
+			Primera radi, ako imamo seme/tabele Radnik, i Projekat kao entitete, i Angazovanje (radnika na projektu) kao poveznik.
+			Relaciona sema bi bila, "Ne moze se isti radnik angazovati na istom projektu vise od jedanput."
+			Dakle modelira medjutabelarne odnose.
+		- Relaciona baza podataka
+			- Jedna pojava nad zadatom RELACIONOM semom baze podataka (S, I)
+			- Svakoj semi relacije odgovara samo jedna pojava
+
+			-Baza podataka:
+				- Predstavlja JEDNO stanje realnog sistema (BP se stalno menja, te stalno prikazuje razlicita stanja)
+				- Odnos seme BP i BP, je isti kao i odnos LSO i LSP, kao i nivoa intenzije i ekstenzije.
+				  Sema predstavlja staticku strukturu BP, dok je sama BP instanca sa realnim vrednostima stavljenim u tu semu.
+				  Pritom se napominje, da je sema BP sporo promenljiva (retko menjamo strukturu baze), dok se sama BP konstantno menja
+
+		Sto se svega ovoga iznad tice (vezano za seme), moze se svesti na sledece objasnjenje:
+			Baza podataka se bazira na semi baze podataka. Sema joj govori kako izgleda, koja je njena struktura, koje vrednosti smeju polja da imaju.
+			Sema baze podataka se sastoji od vise sema relacija, i ogranicenja izmedju tih sema relacija. 
+			Sema relacije (sema tabele) se sastoji od osnovnih (donekle i logicnih) komponenti: Naziv, Obelezja, Ogranicenja (iliti, ime tabele, kolone tabele, i ogranicenja za podatke)
+
+		- Konzistentnost baze podataka
+			1) Formalno konzistentno stanje 
+				- Ako sve vrednosti relacija zadovoljavaju medjurelaciona ogranicenja 
+			2) Sustinski konzistentno stanje 
+				- Ako vazi formalno konz. stanje (sve relacije su korektne)
+				- Sve relacije predstavljaju sliku stvarnog stanja sistema (tj. moglo bi se reci, ako je BP up-to-date)
+			* SUBP kontrolise samo formalno konzistentno stanje
+
+
+	- Operacijska komponenta 
+		- Ima 3 potkomponente, tj 3 tipa jezika za razlicite svrhe:
+			1) DDL ~ Data definition language
+				- Koristi se za upravljanje SEMOM baze podataka
+				- Koristimo ga recimo da ubacimo novu tabelu, da izbrisemo staru, da definisemo ogranicenja i slicno
+			2) DML ~ Data manipulation language
+				- Operacije za upravljanje samim podacima 
+				- Kada hocemo da dodamo novi podatak, apdejtujemo postojeci, obrisemo postojeci i slicno, koristimo ovaj jezik
+				- U sql komande INSERT, DELETE, UPDATE (cini mi se, mozda gresim)
+			3) QL ~ Query language 
+				- Koristi se za pravljenje upita da bismo dobili podatke od baze podataka 
+				- Primer u sql je ono sto se odmah prvo uci: 'SELECT * FROM Radnik'
+				- Sastoji se od: 
+					- Operatora za sacinjavanje upita (kao keywords)
+					- Pravila za formiranje upita/izraza (sintaksa i slicno)
+					- Pravila za primenu operatora 
+				- Vrste upitnih jezika u RMP
+					- Relaciona algebra 
+						- Zasnovana na teoriji skupova i skupovnih operacija 
+						- Unija, presek, razlika
+					- Relacioni racun
+						- Logicki racun 
+						- Moze biti nad torkama ili na domenima
+		- Selekcija
+			- Komanda pomocu koje vrsimo selekciju podataka iz relacije 
+			- Omogucava izbor torki po nekom kriterujumu F 
+			- F je logicka formula (mora da se evaluira na TRUE/FALSE, inace ne valja)
+				npr. SELECT * FROM Radnik WHERE 'GodRodjenja > 1980'  => Ovo na kraju je boolean logicki izraz
+
+		- Projekcija (restrikcija) relacije 
+			- Izdvajanje restriktovanih torki iz relacije na osnovu nekog kriterijuma
+			- Formalnije, projektovanje relacije na podskup skupa njenih obelezja 
+			- Seljackim jezikom, isto sto sam napisao za restriktovanu torku, samo sto ovo vazi ne samo za jednu torku, nego za sve torke
+			  iz relacije.
+	
+		- Prirodni spoj relacija 
+			- Spajanje torki iz razlicitih relacija na osnovu istih ZAJEDNICKIH obelezja 
+				Tipa ako imamo u 2 tabele/relacije nesto poput 
+				a1 b1 c1  		e1 g1 b1
+				To mozemo da iskombinujemo u 
+				a1 b1 c1 g1 e1
+		- Dekartov proizvod relacija 
+			- Spajanje kada formiramo sve moguce kombinacije torki iz 2 relacije 
+		- Theta spajanje
+			- Spajanje torki po nekom kriterijumu
+
+
+	- Integritetna komponenta (ogranicenja)
+		- Definisana putem tipova ogranicenja 
+		- Sadrzi:
+			- Definiciju (formalnu)
+			- Nacin za validaciju 
+		
+		- Karakterisitke:
+			- Skup operacija kojima se moze dovesti do narusenja ogranicenja (opasnost)
+			- Skup akcija kojima se obezbedjuje ocuvanje validnosti baze podataka (odbrana)
+
+		- Tipovi ogranicenja u RMP:
+			- Domena
+			- Vrednosti obelezja
+			- Torke (medju obelezjima jedne torke)
+			- Kljuca
+			- Jedinstvenosti
+
+		- Oblast definisanosti:
+			- Vanrelaciono
+				- Definise se izvan seme
+			- Jednorelaciono
+				- Definise se u okviru jedne seme/relacije 
+			- Viserelaciono 
+				- Definise se za vise sema/relacija
+
+		__________________________________________________________________________________________________________________
+		- Ogranicenje domena 
+			D(id(D), predef)
+			- D       ~ naziv domena
+			- id(D)   ~ Ogranicenje domena (T, D, U)  => Tip, duzina, uslov (tip jedini obavezan)
+			- Predef  ~ Predefinisana vrednost domena 
+			
+		- Ogranicenja obelezja 
+			id(N, A) = (Domen, Null, Uslov)
+			- Domen  ~ naziv domena za to obelezje (domen je ovo od gore, TDU, tako da je ogr. obelezja ustv ((TDU) Null Uslov)
+			- Null   ~ da li polje sme biti nepostojece
+			- Uslov  ~ uslov koji svako obelezje tog imena mora da ispuni 
+
+			* Napomena: uslov domena nije isto sto i uslov obelezja. 
+			  Intedzer kao domen sme da bude -1. Godine u polju korisnika ne smeju biti -1.
+			- Domen i Null su obavezni kod navodjenja! Uslov nije. Ako uslov nije definisan, nasledjuje se domenski uslov.
+
+		- Ogranicenje torke 
+			- Izrazava potencijalna ogranicenja izmedju vrednosti obelezja u okviru jedne torke 
+			- Sta ovo znaci? Pa recimo, glup primer, ako korisnik odvojeno unosi godiste i broj godina, moze da unese godiste 1970 
+			  a da stavi da ima 15 godina. Ove 2 vrednosti su u kontekstu ogranicenja obelezja u redu, ispunjavaju uslov domena.
+			  Sa aspekta cele torke, ovo nema smisla. Dakle u ovim ogranicenjima se bavimo medjusobnim odnosom vrednosti obelezja, tj.
+			  gledamo da li su medjusobno korektne.
+
+		- Ogranicenje kljuca
+			* Za sva obelezja kljuca, vrednost NULL je zabranjena! 
+			- Svaka sema/relacija/tabela (ovo je sve jedno ime za istu stvar) mora da ima JEDAN primarni kljuc (kljuc moze biti vise obelezja)
+			* Ogranicenje jedinstvenosti
+				- Zahteva da svaki kljuc u okviru relacije bude jedinstven
+				  Tj. da za svaku torku, kombinacija obelezja koja sluze kao identifikator, budu unikatna u toj relaciji.
+				  Npr za studente, imamo jedinstven broj indeksa (SMER-XXX-YYYY)
+				  Za ulogu radnika u fabrici bismo mogli imati 2 obelezja kao kljuc, {SIFRA_RADNIKA + SIFRA_ULOGE}, ako bi jednom
+				  radniku bilo dozvoljeno da radi vise poslova/uloga odjednom.
+			- Vrste kljuceva:
+				- Primarno (glavno) obelezje
+				- Neprimarno (sporedno) obelezje
+
+		- Skup svih ogranicenja seme relacije 
+			- Kombinacija:
+				Ogranicenja kljuceva + Ogranicenja jedinstvenosti + Ogranicenja torke (torka preuzima domen i obelezja na sebe)
+			- Primera radi za tabelu Radnik = (MBR, IME, PRZ, JMBG, GOD), imamo sledece:
+				K = {MBR}	=> Primarni kljuc
+				UNIQUE(JMBG)	=> Svaki JMBG mora biti jedinstven
+				id(Radnik)	=> Svaki Radnik mora da ispuni uslove koje mi definisemo u SUBP 
+
+// Nedostaju zavisnost sadrzavanja, funkcionalna zavisnost, armstrongova pravila, ogranicenje referencijalnog integriteta
+
+// Nedostaje Univerzalna relacija 
+			
