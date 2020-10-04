@@ -19,7 +19,16 @@
 
 * Skripta za usmeni 
   * Kratka rekapitulacija najbitnijih tema koje dolaze na usmeni. 
-  * Neophodno je dati odgovor na sva 3 pitanja koja budu postavljena. 
-  * Jedno pitanje je ER model, drugo je Relacioni model, trece je iz ostatka gradiva
+  * Neophodno je dati odgovor na sva 3 pitanja koja budu postavljena (ne skroz ali morate nesto znati).
+  * Osim fajlova koji postoje u ovom repozitorijumu, nedostaju sledeci:
+    * Indeks sekvencijalna datoteka
+    * Datoteke sa vise kljuceva
+    * Funkcionalna zavisnost
+    * Preslikavanje ER modela u relacioni model
+  * Jedno pitanje je ER model, drugo je Relacioni model, trece je najcesce iz organizacije podataka.
+  * Moja preporuka je da se procitaju sve prezentacije bar jednom, da se stekne sira slika o gradivu
+  * Nije neophodno znati formalne definicije. Pitace verovatno, ali ako ne znate to je samo 2-3 boda manje.
+  * Armostronga pita za 10.
+
 
 
